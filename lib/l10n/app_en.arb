@@ -1,0 +1,15 @@
+{
+  "@@locale": "en",
+  "justNow": "just now",
+  "minuteAgo": "1 minute ago",
+  "minutesAgo": "{count} minutes ago",
+  "hourAgo": "1 hour ago",
+  "hoursAgo": "{count} hours ago",
+  "dayAgo": "1 day ago",
+  "daysAgo": "{count} days ago",
+  "monthAgo": "1 month ago",
+  "monthsAgo": "{count} months ago",
+  "sec": "sec",
+  "mins": "min",
+  "hours": "hours"
+}

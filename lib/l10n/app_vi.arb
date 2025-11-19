@@ -1,0 +1,15 @@
+{
+  "@@locale": "vi",
+  "justNow": "vừa xong",
+  "minuteAgo": "1 phút trước",
+  "minutesAgo": "{count} phút trước",
+  "hourAgo": "1 giờ trước",
+  "hoursAgo": "{count} giờ trước",
+  "dayAgo": "1 ngày trước",
+  "daysAgo": "{count} ngày trước",
+  "monthAgo": "1 tháng trước",
+  "monthsAgo": "{count} tháng trước",
+  "sec": "giây",
+  "mins": "phút",
+  "hours": "giờ"
+}
