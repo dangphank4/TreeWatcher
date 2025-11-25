@@ -26,7 +26,7 @@ class MainModule extends Module {
   }
 
   @override
-  List<Module> get imports => [AppModule()];
+  List<Module> get imports => [AppModule(),AuthModule()];
 
   @override
   void routes(RouteManager r) {

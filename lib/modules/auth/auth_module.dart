@@ -1,4 +1,5 @@
 import 'package:flutter_api/modules/auth/presentation/blocs/auth_bloc.dart';
+import 'package:flutter_api/modules/auth/presentation/page/register_page.dart';
 import 'package:flutter_api/modules/auth/presentation/page/sign_in_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -13,7 +14,7 @@ class AuthModule extends Module {
     i.addSingleton(() => AuthApi());
     i.addSingleton(() => AuthRepository(api: Modular.get<AuthApi>()));
     i.addSingleton(
-          () => AuthBloc(repository: Modular.get<AuthRepository>()),
+          () => AuthBloc(authRepository: Modular.get<AuthRepository>()),
     );
   }
 
@@ -21,5 +22,6 @@ class AuthModule extends Module {
   void routes(RouteManager r) {
     super.routes(r);
     r.child(AuthModuleRoutes.signIn, child: (context) => SignInPage());
+    r.child(AuthModuleRoutes.register, child: (context) => RegisterPage());
   }
 }

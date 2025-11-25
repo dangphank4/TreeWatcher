@@ -29,11 +29,10 @@ class MainWidget extends StatefulWidget {
 
 class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
   bool _firstLoad = false;
-  final _appBloc = Modular.get<AppBloc>();
   @override
   void initState() {
-    super.initState();
     WidgetsBinding.instance.addObserver(this);
+    super.initState();
 
     Modular.setInitialRoute(
       '${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}',
@@ -49,7 +48,11 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (context) => Modular.get<AppBloc>())],
+      providers: [
+        BlocProvider(
+            create: (context) => Modular.get<AppBloc>()
+        )
+      ],
       child: MediaQuery(
         data: MediaQuery.of(
           context,
@@ -63,7 +66,7 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
               if (state.isConfigLoaded != -1) {
                 if (!_firstLoad) {
                   _firstLoad = true;
-                  // WebsocketService.init();
+                  //WebsocketService.init();
                   // await Signaling.instance.connect();
                 }
               }
