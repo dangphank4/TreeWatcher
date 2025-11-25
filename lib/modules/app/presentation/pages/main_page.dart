@@ -6,6 +6,8 @@ import 'package:flutter_api/core/components/app_annotated_region.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
 import 'package:flutter_api/core/mixin/route_focus_mixin.dart';
 import 'package:flutter_api/main.dart' as AppModuleRoutes;
+import 'package:flutter_api/modules/auth/presentation/blocs/auth_bloc.dart';
+import 'package:flutter_api/modules/auth/presentation/blocs/auth_event.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
@@ -90,9 +92,15 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
             bottomNavigationBar: Stack(
               alignment: Alignment.bottomCenter,
               children: [
-
+                TextButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(AuthLogoutRequested());
+                  },
+                  child: const Text('Logout'),
+                ),
               ],
             ),
+
           ),
         ),
         // Positioned(

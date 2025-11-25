@@ -6,31 +6,33 @@ import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/core/utils/globals.dart';
 import 'package:flutter_api/core/utils/utils.dart';
 import 'package:flutter_api/modules/auth/general/auth_module_routes.dart';
-import 'package:flutter_api/modules/auth/presentation/blocs/auth_bloc.dart';
-import 'package:flutter_api/modules/auth/presentation/blocs/auth_event.dart';
-import 'package:flutter_api/modules/auth/presentation/blocs/auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import '../../../app/general/app_module_routes.dart';
+import '../blocs/auth_bloc.dart';
+import '../blocs/auth_event.dart';
+import '../blocs/auth_state.dart';
 
-class SignInPage extends StatefulWidget {
-  const SignInPage({super.key});
+class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _SignInPageState extends State<SignInPage> {
+class _RegisterPageState extends State<RegisterPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _passwordConfirmController = TextEditingController();
 
   bool _obscurePassword = true;
+  bool _obscurerConfirmPassword = true;
   final _authBloc = Modular.get<AuthBloc>();
-
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
+    _passwordConfirmController.dispose();
     super.dispose();
   }
 
@@ -39,20 +41,20 @@ class _SignInPageState extends State<SignInPage> {
     return BlocListener<AuthBloc, AuthState>(
       bloc: _authBloc,
       listener: (context, state) {
-        if(state is AuthLoading){
-        } else if (state is AuthAuthenticated){
-          Utils.debugLog('Login success: ${state.data}');
-          Utils.debugLog('Global: ${Globals.globalAccessToken}');
-          Utils.debugLog('Global: ${Globals.globalUserId}');
+        if (state is AuthLoading) {
+          // Có thể show loading indicator
+        } else if (state is AuthAuthenticated) {
+          Utils.debugLog('Register success: ${state.data}');
+          // Chuyển sang màn hình chính
           NavigationHelper.replace(
-            '${AppRoutes.moduleApp}${AppModuleRoutes.main}'
+            '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
           );
-        }else if (state is AuthFailure) {
+        } else if (state is AuthFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(state.message)),
           );
         }
-      } ,
+      },
       child: Scaffold(
         backgroundColor: Colors.black,
         body: Padding(
@@ -61,9 +63,9 @@ class _SignInPageState extends State<SignInPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                  'LogIn',
+                'Register',
                 style: Styles.h1.smb.copyWith(
-                  color: Colors.white
+                    color: Colors.white
                 ),
               ),
               SizedBox(height: 20),
@@ -115,8 +117,35 @@ class _SignInPageState extends State<SignInPage> {
                 ),
               ),
               const SizedBox(height: 24),
-
+              TextField(
+                controller: _passwordConfirmController,
+                obscureText: _obscurerConfirmPassword,
+                style: const TextStyle(color: Colors.white),
+                decoration: InputDecoration(
+                  labelText: 'Mật khẩu',
+                  labelStyle: const TextStyle(color: Colors.white70),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                    borderSide: const BorderSide(color: Colors.white24),
+                  ),
+                  suffixIcon: IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _obscurerConfirmPassword = !_obscurerConfirmPassword;
+                      });
+                    },
+                    icon: Icon(
+                      _obscurerConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.white70,
+                    ),
+                  ),
+                ),
+              ),
               // BUTTON LOGIN
+              const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
                 height: 48,
@@ -129,9 +158,16 @@ class _SignInPageState extends State<SignInPage> {
                   ),
                   onPressed: () async {
                     final email = _emailController.text;
-                    final password = _passwordController.text;
+                    if(_passwordConfirmController.text != _passwordController.text){
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Vui lòng nhập đúng mật khẩu')),
+                      );
+                      return;
+                    }
+                    final password =  _passwordController.text;
 
-                    if (email.isEmpty || password.isEmpty) {
+                    if (email.isEmpty || password == '') {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                             content: Text('Vui lòng nhập đủ thông tin')),
@@ -145,16 +181,17 @@ class _SignInPageState extends State<SignInPage> {
                     // NavigationHelper.replace(
                     //   '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
                     // );
-                    Utils.debugLog('Login successed}');
+                    Utils.debugLog('Regisiter successed}');
                     _authBloc.add(
-                      AuthLoginRequested(
-                          email: email,
-                          password: password)
+                      AuthRegisterRequested(
+                        email: email,
+                        password: password,
+                      ),
                     );
 
                   },
                   child: const Text(
-                    'Đăng nhập',
+                    'Đăng ký',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -164,9 +201,9 @@ class _SignInPageState extends State<SignInPage> {
                 width: double.infinity,
                 child: TextButton(
                     onPressed: (){
-                      NavigationHelper.replace('${AppRoutes.moduleAuth}${AuthModuleRoutes.register}');
+                      NavigationHelper.replace('${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}');
                     },
-                    child: Text('Create an account?')
+                    child: Text('You have an account? SignIn')
                 ),
               )
             ],
