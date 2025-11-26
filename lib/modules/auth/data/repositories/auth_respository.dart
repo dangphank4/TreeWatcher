@@ -51,4 +51,25 @@ class AuthRepository {
   Future<void> logout() async {
     await api.logout();
   }
+
+  Future<bool> resetPassword({required String email}) async {
+    try {
+      await api.resetPassword(email: email);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<bool> updatePassword({
+    required String currentPassword,
+    required String newPassword,
+}) async {
+    try{
+      await api.updatePassword(currentPassword: currentPassword, newPassword: newPassword);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
 }
