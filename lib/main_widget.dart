@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_api/modules/app/general/app_module_routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -33,10 +34,16 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
-
-    Modular.setInitialRoute(
+    if(Globals.globalAccessToken != null){
+      Modular.setInitialRoute(
+        '${AppRoutes.moduleApp}${AppModuleRoutes.main}'
+      );
+    }
+    else {
+      Modular.setInitialRoute(
       '${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}',
     );
+    }
   }
 
   @override

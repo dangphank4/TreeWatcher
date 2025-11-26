@@ -5,13 +5,13 @@ import 'package:flutter_api/core/extensions/num_extendsion.dart';
 import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/core/utils/globals.dart';
 import 'package:flutter_api/core/utils/utils.dart';
+import 'package:flutter_api/modules/app/general/app_module_routes.dart';
 import 'package:flutter_api/modules/auth/general/auth_module_routes.dart';
 import 'package:flutter_api/modules/auth/presentation/blocs/auth_bloc.dart';
 import 'package:flutter_api/modules/auth/presentation/blocs/auth_event.dart';
 import 'package:flutter_api/modules/auth/presentation/blocs/auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import '../../../app/general/app_module_routes.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
@@ -39,20 +39,20 @@ class _SignInPageState extends State<SignInPage> {
     return BlocListener<AuthBloc, AuthState>(
       bloc: _authBloc,
       listener: (context, state) {
-        if(state is AuthLoading){
-        } else if (state is AuthAuthenticated){
+        if (state is AuthLoading) {
+        } else if (state is AuthAuthenticated) {
           Utils.debugLog('Login success: ${state.data}');
           Utils.debugLog('Global: ${Globals.globalAccessToken}');
           Utils.debugLog('Global: ${Globals.globalUserId}');
           NavigationHelper.replace(
-            '${AppRoutes.moduleApp}${AppModuleRoutes.main}'
+            '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
           );
-        }else if (state is AuthFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+        } else if (state is AuthFailure) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
-      } ,
+      },
       child: Scaffold(
         backgroundColor: Colors.black,
         body: Padding(
@@ -60,12 +60,7 @@ class _SignInPageState extends State<SignInPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(
-                  'LogIn',
-                style: Styles.h1.smb.copyWith(
-                  color: Colors.white
-                ),
-              ),
+              Text('LogIn', style: Styles.h1.smb.copyWith(color: Colors.white)),
               SizedBox(height: 20),
               // Email
               TextField(
@@ -108,13 +103,32 @@ class _SignInPageState extends State<SignInPage> {
                       });
                     },
                     icon: Icon(
-                      _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                      _obscurePassword
+                          ? Icons.visibility_off
+                          : Icons.visibility,
                       color: Colors.white70,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
+              10.verticalSpace,
+              Container(
+                alignment: Alignment.centerRight,
+                child: TextButton(
+                  onPressed: () {
+                    NavigationHelper.replace('${AppRoutes.moduleAuth}${AuthModuleRoutes.forgotPassword}');
+                  },
+                  child: Text(
+                    'Fogot Password?',
+                    style: Styles.sfNormal.regular.copyWith(
+                      color: Colors.lightBlueAccent,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Colors.lightBlueAccent,
+                    ),
+                  ),
+                ),
+              ),
+              24.verticalSpace,
 
               // BUTTON LOGIN
               SizedBox(
@@ -134,7 +148,8 @@ class _SignInPageState extends State<SignInPage> {
                     if (email.isEmpty || password.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text('Vui lòng nhập đủ thông tin')),
+                          content: Text('Vui lòng nhập đủ thông tin'),
+                        ),
                       );
                       return;
                     }
@@ -147,11 +162,8 @@ class _SignInPageState extends State<SignInPage> {
                     // );
                     Utils.debugLog('Login successed}');
                     _authBloc.add(
-                      AuthLoginRequested(
-                          email: email,
-                          password: password)
+                      AuthLoginRequested(email: email, password: password),
                     );
-
                   },
                   child: const Text(
                     'Đăng nhập',
@@ -163,12 +175,14 @@ class _SignInPageState extends State<SignInPage> {
               SizedBox(
                 width: double.infinity,
                 child: TextButton(
-                    onPressed: (){
-                      NavigationHelper.replace('${AppRoutes.moduleAuth}${AuthModuleRoutes.register}');
-                    },
-                    child: Text('Create an account?')
+                  onPressed: () {
+                    NavigationHelper.replace(
+                      '${AppRoutes.moduleAuth}${AuthModuleRoutes.register}',
+                    );
+                  },
+                  child: Text('Create an account?'),
                 ),
-              )
+              ),
             ],
           ),
         ),

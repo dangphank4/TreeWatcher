@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 
 class AuthApi {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -37,5 +38,38 @@ class AuthApi {
   /// Logout
   Future<void> logout() async {
     await _auth.signOut();
+  }
+
+  /// Gửi email đặt lại mật khẩu
+  Future<void> resetPassword({
+    required String email,
+  }) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.message ?? "Reset password failed");
+    }
+  }
+
+  Future<void> updatePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw Exception("Người dùng chưa đăng nhập");
+    }
+
+    try {
+      final cred = EmailAuthProvider.credential(
+        email: user.email!,
+        password: currentPassword,
+      );
+      await user.reauthenticateWithCredential(cred);
+
+      await user.updatePassword(newPassword);
+    } on FirebaseAuthException catch (e) {
+      throw Exception(e.message ?? "Đổi mật khẩu thất bại");
+    }
   }
 }

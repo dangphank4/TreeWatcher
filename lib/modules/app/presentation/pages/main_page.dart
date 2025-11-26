@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_api/core/components/app_annotated_region.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
+import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/core/mixin/route_focus_mixin.dart';
 import 'package:flutter_api/main.dart' as AppModuleRoutes;
+import 'package:flutter_api/modules/auth/general/auth_module_routes.dart';
 import 'package:flutter_api/modules/auth/presentation/blocs/auth_bloc.dart';
 import 'package:flutter_api/modules/auth/presentation/blocs/auth_event.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -79,7 +81,7 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
       children: [
         AppAnnotatedRegion(
           child: Scaffold(
-            backgroundColor: Colors.red,
+            backgroundColor: Colors.blue,
             body: PreloadPageView(
               pageSnapping: true,
               controller: _pageController,
@@ -89,14 +91,21 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
               onPageChanged: (value) {},
             ),
             extendBody: true,
-            bottomNavigationBar: Stack(
-              alignment: Alignment.bottomCenter,
+            bottomNavigationBar: Row(
               children: [
                 TextButton(
                   onPressed: () {
                     context.read<AuthBloc>().add(AuthLogoutRequested());
                   },
                   child: const Text('Logout'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    NavigationHelper.reset(
+                      '${AppRoutes.moduleAuth}${AuthModuleRoutes.updatePassword}',
+                    );
+                  },
+                  child: const Text('Resetpassword'),
                 ),
               ],
             ),

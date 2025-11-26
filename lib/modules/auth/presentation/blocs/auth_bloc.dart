@@ -19,6 +19,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<AuthLoginRequested>(_onLoginRequested);
     on<AuthRegisterRequested>(_onRegisterRequested); // thêm sự kiện register
     on<AuthLogoutRequested>(_onLogoutRequested);
+    on<AuthResetPasswordRequested>(_onResetPasswordRequested);
+    on<AuthUpdatePasswordRequested>(_onUpdatePasswordRequested);
   }
 
   // Xử lý login
@@ -34,7 +36,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (data != null) {
       // Cập nhật Globals
       Globals.globalAccessToken = data['token'];
-      Globals.globalUserId = data['userId'];
+      Globals.globalUserUUID = data['userId'];
       Globals.globalUsername = data['username'];
 
       // Lưu vào SharedPreferences
@@ -63,7 +65,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     if (data != null) {
       Globals.globalAccessToken = data['token'];
-      Globals.globalUserId = data['userId'];
+      Globals.globalUserUUID = data['userId'];
       Globals.globalUsername = data['username'];
 
       await sharedPreferenceHelper.set(
@@ -86,7 +88,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     // Xóa globals
     Globals.globalAccessToken = null;
-    Globals.globalUserId = null;
+    Globals.globalUserUUID = null;
     Globals.globalUsername = null;
 
     // Xóa SharedPreferences
@@ -99,5 +101,46 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
 
     emit(const AuthUnauthenticated());
+  }
+
+  Future<void> _onResetPasswordRequested(
+      AuthResetPasswordRequested event,
+      Emitter<AuthState> emit,
+      ) async {
+    emit(AuthLoading());
+
+    final result = await authRepository.resetPassword(email: event.email);
+
+    if (result) {
+      emit(AuthResetPasswordSuccess(
+        message: "Email đặt lại mật khẩu đã được gửi!",
+      ));
+    } else {
+      emit(AuthResetPasswordFailure(
+        error: "Không thể gửi email. Vui lòng kiểm tra lại địa chỉ email.",
+      ));
+    }
+  }
+
+  Future<void> _onUpdatePasswordRequested(
+      AuthUpdatePasswordRequested event,
+      Emitter<AuthState> emit,
+      ) async {
+    emit(AuthLoading());
+
+    final result = await authRepository.updatePassword(
+        currentPassword: event.currentPassword,
+        newPassword: event.newPassword
+    );
+
+    if(result){
+      emit(AuthUpdatePasswordSuccess(
+        message: "Đặt lại mật khẩu thành công!"
+      ));
+    } else {
+      emit(AuthUpdatePasswordFailure(
+          error: "Đặt lại mật khẩu không thành công!"
+      ));
+    }
   }
 }
