@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 
 class AuthApi {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
   /// Login với email/password
   Future<UserCredential> login({
     required String email,

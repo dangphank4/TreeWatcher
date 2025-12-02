@@ -3,6 +3,7 @@ import 'package:flutter_api/core/components/app_annotated_region.dart';
 import 'package:flutter_api/core/constants/app_colors.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
 import 'package:flutter_api/core/mixin/route_focus_mixin.dart';
+import 'package:flutter_api/modules/accpunt/presentation/page/account_page.dart';
 import 'package:flutter_api/modules/app/presentation/components/title_navigaion_bar/navigation_bar.dart';
 import 'package:flutter_api/modules/app/presentation/components/title_navigaion_bar/navigation_bar_item.dart';
 import 'package:flutter_api/modules/auth/presentation/page/update_password_page.dart';
@@ -22,7 +23,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
   late PreloadPageController _pageController;
-  int _currentIndex = 0;
+  late int _currentIndex = 0;
 
   @override
   void initState() {
@@ -39,7 +40,7 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
   }
 
   List<Widget> _pageViews() {
-    return [WeatherPage(), UpdatePasswordPage()];
+    return [WeatherPage(), AccountPage()];
   }
 
 
@@ -49,6 +50,7 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
     });
     _pageController.jumpToPage(value);
   }
+
 
   @override
   String get routePath => '${AppRoutes.moduleApp}${AppModuleRoutes.main}';

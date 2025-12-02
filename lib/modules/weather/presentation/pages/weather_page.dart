@@ -15,19 +15,13 @@ class _WeatherPageState extends State<WeatherPage>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-            width: double.infinity,
-        height: double.infinity,
-        color: Colors.grey,
+      body: SafeArea(
         child: Container(
-          color: Colors.white,
+          color: Colors.red,
           height: 30,
-          width: 60,
-          child: Text(
-            'Weather',
-            style: Styles.large.regular.copyWith(
-              color: Colors.black26
-            ),
+          child: SizedBox(
+            height: 30,
+            child: Text('Weather'),
           ),
         ),
       ),

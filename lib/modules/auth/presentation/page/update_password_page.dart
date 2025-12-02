@@ -86,45 +86,47 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('Đặt lại mật khẩu')),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              TextField(
-                controller: _oldController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Mật khẩu cũ',
-                  border: OutlineInputBorder(),
+       appBar: AppBar(title: const Text('Đặt lại mật khẩu')),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: [
+                TextField(
+                  controller: _oldController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Mật khẩu cũ',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _newController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Mật khẩu mới',
-                  border: OutlineInputBorder(),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _newController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Mật khẩu mới',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _confirmController,
-                obscureText: true,
-                decoration: const InputDecoration(
-                  labelText: 'Xác nhận mật khẩu mới',
-                  border: OutlineInputBorder(),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: _confirmController,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    labelText: 'Xác nhận mật khẩu mới',
+                    border: OutlineInputBorder(),
+                  ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              _isLoading
-                  ? const CircularProgressIndicator()
-                  : ElevatedButton(
-                onPressed: _submit,
-                child: const Text('Đặt lại mật khẩu'),
-              ),
-            ],
+                const SizedBox(height: 24),
+                _isLoading
+                    ? const CircularProgressIndicator()
+                    : ElevatedButton(
+                  onPressed: _submit,
+                  child: const Text('Đặt lại mật khẩu'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
