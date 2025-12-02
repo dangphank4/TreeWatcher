@@ -13,4 +13,7 @@ class AppColors{
     green: 1,
     blue: 1,
   );
+
+  static const navBg = Color(0xFF2A2A2A);
+  static const Color primary = Color(0xFF40F492);
 }

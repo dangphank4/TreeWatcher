@@ -34,6 +34,7 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
+    Modular.setNavigatorKey(AppKeys.navigatorKey);
     if(Globals.globalAccessToken != null){
       Modular.setInitialRoute(
         '${AppRoutes.moduleApp}${AppModuleRoutes.main}'

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_api/modules/weather/weather_module.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/constants/app_evironment.dart';
@@ -26,7 +27,7 @@ class MainModule extends Module {
   }
 
   @override
-  List<Module> get imports => [AppModule(),AuthModule()];
+  List<Module> get imports => [AppModule(),AuthModule(), WeatherModule()];
 
   @override
   void routes(RouteManager r) {
@@ -34,5 +35,6 @@ class MainModule extends Module {
 
     r.module(AppRoutes.moduleApp, module: AppModule());
     r.module(AppRoutes.moduleAuth, module: AuthModule());
+    r.module(AppRoutes.moduleWeather, module: WeatherModule());
   }
 }

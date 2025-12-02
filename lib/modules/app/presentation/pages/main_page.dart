@@ -1,17 +1,17 @@
-
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_api/core/components/app_annotated_region.dart';
+import 'package:flutter_api/core/constants/app_colors.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
-import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/core/mixin/route_focus_mixin.dart';
-import 'package:flutter_api/main.dart' as AppModuleRoutes;
-import 'package:flutter_api/modules/auth/general/auth_module_routes.dart';
-import 'package:flutter_api/modules/auth/presentation/blocs/auth_bloc.dart';
-import 'package:flutter_api/modules/auth/presentation/blocs/auth_event.dart';
+import 'package:flutter_api/modules/app/presentation/components/title_navigaion_bar/navigation_bar.dart';
+import 'package:flutter_api/modules/app/presentation/components/title_navigaion_bar/navigation_bar_item.dart';
+import 'package:flutter_api/modules/auth/presentation/page/update_password_page.dart';
+import 'package:flutter_api/modules/weather/presentation/pages/weather_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:preload_page_view/preload_page_view.dart';
+
+import '../../general/app_module_routes.dart';
+
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -39,18 +39,14 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
   }
 
   List<Widget> _pageViews() {
-    return [];
+    return [WeatherPage(), UpdatePasswordPage()];
   }
 
-  // void navigatePageView(int value) {
-  //   _pageController.jumpToPage(
-  //     value,
-  //     // duration: const Duration(milliseconds: 200),
-  //     // curve: Curves.easeInOut,
-  //   );
-  // }
 
   void navigatePageView(int value) {
+    setState(() {
+      _currentIndex = value;
+    });
     _pageController.jumpToPage(value);
   }
 
@@ -81,7 +77,7 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
       children: [
         AppAnnotatedRegion(
           child: Scaffold(
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.transparent,
             body: PreloadPageView(
               pageSnapping: true,
               controller: _pageController,
@@ -91,39 +87,30 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
               onPageChanged: (value) {},
             ),
             extendBody: true,
-            bottomNavigationBar: Row(
-              children: [
-                TextButton(
-                  onPressed: () {
-                    context.read<AuthBloc>().add(AuthLogoutRequested());
+            bottomNavigationBar:
+                TitledBottomNavigationBar(
+                  onTap: (value) {
+                    navigatePageView(value);
                   },
-                  child: const Text('Logout'),
+                  inactiveColor: Colors.white,
+                  activeColor: AppColors.primary,
+                  indicatorColor: Colors.transparent,
+                  currentIndex: _currentIndex,
+                  items: [
+                    TitledNavigationBarItem(
+                      icon: Icons.cloud_outlined,
+                      activeIcon: Icons.cloud,
+                      title: 'weather',
+                    ),
+                    TitledNavigationBarItem(
+                      icon: Icons.people_alt_outlined,
+                      activeIcon: Icons.people_alt_rounded,
+                      title: 'Users',
+                    ),
+                  ],
                 ),
-                TextButton(
-                  onPressed: () {
-                    NavigationHelper.reset(
-                      '${AppRoutes.moduleAuth}${AuthModuleRoutes.updatePassword}',
-                    );
-                  },
-                  child: const Text('Resetpassword'),
-                ),
-              ],
-            ),
-
           ),
         ),
-        // Positioned(
-        //   right: 30,
-        //   bottom: 40,
-        //   child: FloatingActionButton(
-        //     onPressed: () {
-        //       Utils.debugLog('pressed');
-        //       Modular.to.pushNamed(
-        //         '${AppRoutes.moduleApp}${AppModuleRoutes.callSreen}',
-        //       );
-        //     },
-        //   ),
-        // ),
       ],
     );
   }
