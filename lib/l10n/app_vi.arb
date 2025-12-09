@@ -11,5 +11,9 @@
   "monthsAgo": "{count} tháng trước",
   "sec": "giây",
   "mins": "phút",
-  "hours": "giờ"
+  "hours": "giờ",
+  "weather": "Thời tiết",
+  "user": "Người dùng",
+  "changePassword": "Đổi mật khẩu",
+  "logOut": "Đăng xuất"
 }

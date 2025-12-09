@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_api/core/components/app_annotated_region.dart';
 import 'package:flutter_api/core/constants/app_colors.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
+import 'package:flutter_api/core/extensions/localized_extendsion.dart';
 import 'package:flutter_api/core/mixin/route_focus_mixin.dart';
 import 'package:flutter_api/modules/accpunt/presentation/page/account_page.dart';
 import 'package:flutter_api/modules/app/presentation/components/title_navigaion_bar/navigation_bar.dart';
@@ -45,9 +46,6 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
 
 
   void navigatePageView(int value) {
-    setState(() {
-      _currentIndex = value;
-    });
     _pageController.jumpToPage(value);
   }
 
@@ -66,6 +64,7 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
       if (index != null) {
         navigatePageView(index);
       }
+      return;
     }
     navigatePageView(0);
   }
@@ -86,7 +85,11 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
               preloadPagesCount: 2,
               physics: const NeverScrollableScrollPhysics(),
               children: _pageViews(),
-              onPageChanged: (value) {},
+              onPageChanged: (value) {
+                setState(() {
+                  _currentIndex = value;
+                });
+              },
             ),
             extendBody: true,
             bottomNavigationBar:
@@ -102,12 +105,12 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
                     TitledNavigationBarItem(
                       icon: Icons.cloud_outlined,
                       activeIcon: Icons.cloud,
-                      title: 'weather',
+                      title: context.localization.weather,
                     ),
                     TitledNavigationBarItem(
                       icon: Icons.people_alt_outlined,
                       activeIcon: Icons.people_alt_rounded,
-                      title: 'Users',
+                      title: context.localization.user,
                     ),
                   ],
                 ),

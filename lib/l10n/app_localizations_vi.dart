@@ -51,4 +51,16 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get hours => 'giờ';
+
+  @override
+  String get weather => 'Thời tiết';
+
+  @override
+  String get user => 'Người dùng';
+
+  @override
+  String get changePassword => 'Đổi mật khẩu';
+
+  @override
+  String get logOut => 'Đăng xuất';
 }

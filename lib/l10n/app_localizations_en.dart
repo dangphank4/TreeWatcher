@@ -51,4 +51,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hours => 'hours';
+
+  @override
+  String get weather => 'Weather';
+
+  @override
+  String get user => 'User';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get logOut => 'Log Out';
 }

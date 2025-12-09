@@ -11,5 +11,9 @@
   "monthsAgo": "{count} months ago",
   "sec": "sec",
   "mins": "min",
-  "hours": "hours"
+  "hours": "hours",
+  "weather": "Weather",
+  "user": "User",
+  "changePassword": "Change Password",
+  "logOut": "Log Out"
 }
