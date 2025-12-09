@@ -37,7 +37,7 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
     Modular.setNavigatorKey(AppKeys.navigatorKey);
     if(Globals.globalAccessToken != null){
       Modular.setInitialRoute(
-        '${AppRoutes.moduleApp}${AppModuleRoutes.main}'
+        '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
       );
     }
     else {

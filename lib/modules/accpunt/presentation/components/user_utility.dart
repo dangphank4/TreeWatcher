@@ -8,26 +8,32 @@ class UserUtility extends StatelessWidget {
   final String title;
   final VoidCallback? onPress;
 
-  UserUtility({super.key, required this.icon, required this.title, this.onPress});
+  UserUtility({
+    super.key,
+    required this.icon,
+    required this.title,
+    this.onPress,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(left: 8, right: 8, top: 8),
-      padding: EdgeInsets.only(left: 16, top: 8, bottom: 8),
-      width: double.infinity,
-      height: 60,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        gradient: LinearGradient(
-          colors: [Colors.white70, Colors.white24, Colors.white70],
-          stops: [0, 0.15, 0.9],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+    return InkWell(
+      onTap: onPress,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        margin: EdgeInsets.only(left: 8, right: 8, top: 8),
+        padding: EdgeInsets.only(left: 16, top: 8, bottom: 8),
+        width: double.infinity,
+        height: 60,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          gradient: LinearGradient(
+            colors: [Colors.white70, Colors.white24, Colors.white70],
+            stops: [0, 0.15, 0.9],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
         ),
-      ),
-      child: InkWell(
-        onTap: onPress,
         child: Row(
           children: [
             Container(

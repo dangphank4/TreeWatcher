@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
+import 'package:flutter_api/core/extensions/localized_extendsion.dart';
 import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/modules/accpunt/presentation/components/user_title.dart';
 import 'package:flutter_api/modules/accpunt/presentation/components/user_utility.dart';
@@ -29,6 +30,7 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       backgroundColor: Colors.transparent,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -42,14 +44,14 @@ class _AccountPageState extends State<AccountPage> {
                 ),
                 UserUtility(
                   icon: Icon(Icons.password),
-                  title: 'Change Password',
+                  title: context.localization.changePassword,
                   onPress: () {
                     NavigationHelper.navigate('${AppRoutes.moduleAuth}${AuthModuleRoutes.updatePassword}',);
                   },
                 ),
                 UserUtility(
                   icon: Icon(Icons.logout),
-                  title: 'Log Out',
+                  title: context.localization.logOut,
                   onPress: () {
                     authBloc.add(AuthLogoutRequested());
                   },
