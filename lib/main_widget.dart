@@ -38,11 +38,6 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
     super.initState();
     Modular.setNavigatorKey(AppKeys.navigatorKey);
 
-    NavigationHelper.navigate(
-      '${AppRoutes.moduleDevice}${DeviceModuleRoutes.addDevice}',
-    );
-    print("init");
-
     if(Globals.globalAccessToken != null){
       Modular.setInitialRoute(
         '${AppRoutes.moduleApp}${AppModuleRoutes.main}',

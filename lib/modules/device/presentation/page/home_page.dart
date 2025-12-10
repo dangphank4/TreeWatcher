@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.add),
             onPressed: () {
-              Modular.to.navigate('/device/add');
+              Modular.to.pushNamed('/device/add');
             },
           ),
         ],

@@ -1,3 +1,4 @@
+// device_module.dart
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'data/datasource/device_api.dart';
@@ -13,7 +14,11 @@ class DeviceModule extends Module {
     i.addSingleton<DeviceApi>(DeviceApi.new);
 
     i.addSingleton<DeviceRepository>(
-            () => DeviceRepository(api: i.get<DeviceApi>())
+          () => DeviceRepository(api: i.get<DeviceApi>()),
+    );
+
+    i.addSingleton<DeviceBloc>(
+          () => DeviceBloc(repo: i.get<DeviceRepository>()),
     );
   }
 
@@ -21,15 +26,18 @@ class DeviceModule extends Module {
   void routes(RouteManager r) {
     r.child(
       DeviceModuleRoutes.addDevice,
-      child: (_) => BlocProvider(
-        create: (context) => DeviceBloc(
-          repo: Modular.get<DeviceRepository>(),
-        ),
+      child: (_) => BlocProvider.value(
+        value: Modular.get<DeviceBloc>(),
         child: const AddDevicePage(),
       ),
     );
 
-    r.child( DeviceModuleRoutes.scanQr, child: (_) => const QrScanPage());
-    r.child( DeviceModuleRoutes.addDevice, child: (_) => const AddDevicePage());
+    r.child(
+      DeviceModuleRoutes.scanQr,
+      child: (_) => BlocProvider.value(
+        value: Modular.get<DeviceBloc>(),
+        child: const QrScanPage(),
+      ),
+    );
   }
 }

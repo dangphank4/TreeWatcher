@@ -35,10 +35,11 @@ class MainModule extends Module {
   void routes(RouteManager r) {
     super.routes(r);
     
-    // r.module(AppRoutes.moduleDevice, module: DeviceModule());
+
     r.module(AppRoutes.moduleApp, module: AppModule());
     r.module(AppRoutes.moduleAuth, module: AuthModule());
     r.module(AppRoutes.moduleWeather, module: WeatherModule());
     r.module(AppRoutes.moduleAccount, module: AccountModule());
+    r.module(AppRoutes.moduleDevice, module: DeviceModule());
   }
 }
