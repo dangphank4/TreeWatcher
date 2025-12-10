@@ -1,8 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_api/core/constants/app_styles.dart';
 import 'package:flutter_api/core/extensions/num_extendsion.dart';
-import 'package:flutter_api/modules/accpunt/presentation/components/user_avatar.dart';
+import 'package:flutter_api/modules/account/presentation/components/user_avatar.dart';
 
 class UserTitle extends StatelessWidget {
   final String userName;

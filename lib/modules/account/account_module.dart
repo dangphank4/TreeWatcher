@@ -1,8 +1,9 @@
-import 'package:flutter_api/modules/accpunt/data/datasource/account_api.dart';
-import 'package:flutter_api/modules/accpunt/data/repositories/account_repository.dart';
-import 'package:flutter_api/modules/accpunt/general/account_module_route.dart';
-import 'package:flutter_api/modules/accpunt/presentation/blocs/account_bloc.dart';
+
+import 'package:flutter_api/modules/account/presentation/blocs/account_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+
+import 'data/datasource/account_api.dart';
+import 'data/repositories/account_repository.dart';
 
 class AccountModule extends Module {
   @override

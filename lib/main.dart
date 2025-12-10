@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'core/constants/app_evironment.dart';
 import 'core/helpers/generalHeper.dart';
 import 'firebase_options.dart';
+import 'modules/device/presentation/page/add_device_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
