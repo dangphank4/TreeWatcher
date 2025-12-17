@@ -1,10 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
 import 'package:flutter_api/core/extensions/localized_extendsion.dart';
 import 'package:flutter_api/core/helpers/navigation_helper.dart';
-import 'package:flutter_api/modules/accpunt/presentation/components/user_title.dart';
-import 'package:flutter_api/modules/accpunt/presentation/components/user_utility.dart';
+import 'package:flutter_api/modules/account/presentation/components/user_title.dart';
+import 'package:flutter_api/modules/account/presentation/components/user_utility.dart';
 import 'package:flutter_api/modules/auth/general/auth_module_routes.dart';
 import 'package:flutter_api/modules/auth/presentation/blocs/auth_bloc.dart';
 import 'package:flutter_api/modules/auth/presentation/blocs/auth_event.dart';

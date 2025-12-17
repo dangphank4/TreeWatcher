@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_api/modules/accpunt/account_module.dart';
+import 'package:flutter_api/modules/account/account_module.dart';
+import 'package:flutter_api/modules/device/device_module.dart';
 import 'package:flutter_api/modules/weather/weather_module.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -28,15 +29,17 @@ class MainModule extends Module {
   }
 
   @override
-  List<Module> get imports => [AppModule(),AuthModule(), WeatherModule(), AccountModule()];
+  List<Module> get imports => [AppModule(),AuthModule(), WeatherModule(), AccountModule() , DeviceModule()];
 
   @override
   void routes(RouteManager r) {
     super.routes(r);
+    
 
     r.module(AppRoutes.moduleApp, module: AppModule());
     r.module(AppRoutes.moduleAuth, module: AuthModule());
     r.module(AppRoutes.moduleWeather, module: WeatherModule());
     r.module(AppRoutes.moduleAccount, module: AccountModule());
+    r.module(AppRoutes.moduleDevice, module: DeviceModule());
   }
 }

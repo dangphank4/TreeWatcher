@@ -1,4 +1,4 @@
-import 'package:flutter_api/modules/accpunt/data/datasource/account_api.dart';
+import 'package:flutter_api/modules/account/data/datasource/account_api.dart';
 
 class AccountRepository{
   final AccountApi api;

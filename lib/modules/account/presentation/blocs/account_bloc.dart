@@ -1,6 +1,6 @@
-import 'package:flutter_api/modules/accpunt/data/repositories/account_repository.dart';
-import 'package:flutter_api/modules/accpunt/presentation/blocs/account_event.dart';
-import 'package:flutter_api/modules/accpunt/presentation/blocs/account_state.dart';
+import 'package:flutter_api/modules/account/data/repositories/account_repository.dart';
+import 'package:flutter_api/modules/account/presentation/blocs/account_event.dart';
+import 'package:flutter_api/modules/account/presentation/blocs/account_state.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 
 class AccountBloc extends HydratedBloc<AccountEvent, AccountState> {

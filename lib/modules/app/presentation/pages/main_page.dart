@@ -4,7 +4,7 @@ import 'package:flutter_api/core/constants/app_colors.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
 import 'package:flutter_api/core/extensions/localized_extendsion.dart';
 import 'package:flutter_api/core/mixin/route_focus_mixin.dart';
-import 'package:flutter_api/modules/accpunt/presentation/page/account_page.dart';
+import 'package:flutter_api/modules/account/presentation/page/account_page.dart';
 import 'package:flutter_api/modules/app/presentation/components/title_navigaion_bar/navigation_bar.dart';
 import 'package:flutter_api/modules/app/presentation/components/title_navigaion_bar/navigation_bar_item.dart';
 import 'package:flutter_api/modules/auth/presentation/page/update_password_page.dart';
@@ -12,6 +12,7 @@ import 'package:flutter_api/modules/weather/presentation/pages/weather_page.dart
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
+import '../../../device/presentation/page/home_page.dart';
 import '../../general/app_module_routes.dart';
 
 
@@ -41,7 +42,7 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
   }
 
   List<Widget> _pageViews() {
-    return [WeatherPage(), AccountPage()];
+    return [const HomePage(), WeatherPage(), AccountPage()];
   }
 
 
@@ -82,7 +83,7 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
             body: PreloadPageView(
               pageSnapping: true,
               controller: _pageController,
-              preloadPagesCount: 2,
+              preloadPagesCount: 3,
               physics: const NeverScrollableScrollPhysics(),
               children: _pageViews(),
               onPageChanged: (value) {
@@ -102,6 +103,11 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
                   indicatorColor: Colors.transparent,
                   currentIndex: _currentIndex,
                   items: [
+                    TitledNavigationBarItem(
+                      icon: Icons.home_outlined,
+                      activeIcon: Icons.home,
+                      title: 'Home',
+                    ),
                     TitledNavigationBarItem(
                       icon: Icons.cloud_outlined,
                       activeIcon: Icons.cloud,
