@@ -193,6 +193,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Log Out'**
   String get logOut;
+
+  /// No description provided for @pleaseEnterAValidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid email'**
+  String get pleaseEnterAValidEmail;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password'**
+  String get forgotPassword;
+
+  /// No description provided for @email.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get email;
+
+  /// No description provided for @sendRequest.
+  ///
+  /// In en, this message translates to:
+  /// **'Send request'**
+  String get sendRequest;
+
+  /// No description provided for @enterEmailToResetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter email to reset password'**
+  String get enterEmailToResetPassword;
+
+  /// No description provided for @register.
+  ///
+  /// In en, this message translates to:
+  /// **'Register'**
+  String get register;
+
+  /// No description provided for @password.
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get password;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm password'**
+  String get confirmPassword;
+
+  /// No description provided for @pleaseEnterRightPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter right password'**
+  String get pleaseEnterRightPassword;
+
+  /// No description provided for @pleaseEnterCompleteInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter complete information'**
+  String get pleaseEnterCompleteInformation;
+
+  /// No description provided for @youHaveAnAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'You have an account? SignIn'**
+  String get youHaveAnAccount;
+
+  /// No description provided for @logIn.
+  ///
+  /// In en, this message translates to:
+  /// **'LogIn'**
+  String get logIn;
+
+  /// No description provided for @createAnAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Create an account'**
+  String get createAnAccount;
+
+  /// No description provided for @newPasswordDoesNotMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'New password doesn\'t match'**
+  String get newPasswordDoesNotMatch;
+
+  /// No description provided for @resetPasswordSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password successful'**
+  String get resetPasswordSuccess;
+
+  /// No description provided for @resetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset pasword'**
+  String get resetPassword;
+
+  /// No description provided for @oldPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Old password'**
+  String get oldPassword;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get newPassword;
+
+  /// No description provided for @newPasswordConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new pasword'**
+  String get newPasswordConfirm;
+
+  /// No description provided for @max.
+  ///
+  /// In en, this message translates to:
+  /// **'Max'**
+  String get max;
+
+  /// No description provided for @min.
+  ///
+  /// In en, this message translates to:
+  /// **'Min'**
+  String get min;
+
+  /// No description provided for @wind.
+  ///
+  /// In en, this message translates to:
+  /// **'Wind'**
+  String get wind;
+
+  /// No description provided for @precipitation.
+  ///
+  /// In en, this message translates to:
+  /// **'Precipitation'**
+  String get precipitation;
+
+  /// No description provided for @uvIndex.
+  ///
+  /// In en, this message translates to:
+  /// **'UV Index'**
+  String get uvIndex;
+
+  /// No description provided for @cantLoadWeatherData.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t load weather data'**
+  String get cantLoadWeatherData;
+
+  /// No description provided for @enteAreaName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter area name'**
+  String get enteAreaName;
+
+  /// No description provided for @area.
+  ///
+  /// In en, this message translates to:
+  /// **'Area'**
+  String get area;
 }
 
 class _AppLocalizationsDelegate

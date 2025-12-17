@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
+import 'package:flutter_api/core/extensions/localized_extendsion.dart';
 import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/modules/app/general/app_module_routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -38,14 +39,14 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
 
     if (oldPass.isEmpty || newPass.isEmpty || confirm.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng nhập đầy đủ thông tin')),
+        SnackBar(content: Text(context.localization.pleaseEnterCompleteInformation)),
       );
       return;
     }
 
     if (newPass != confirm) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Mật khẩu mới không khớp')),
+        SnackBar(content: Text('Mật khẩu mới không khớp')),
       );
       return;
     }
@@ -70,7 +71,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
 
         if (state is AuthUpdatePasswordSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
+            SnackBar(
               content: Text('Đặt lại mật khẩu thành công!'),
               backgroundColor: Colors.green,
             ),
@@ -86,7 +87,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
         }
       },
       child: Scaffold(
-       appBar: AppBar(title: const Text('Đặt lại mật khẩu')),
+       appBar: AppBar(title: Text(context.localization.resetPassword)),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -95,8 +96,8 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                 TextField(
                   controller: _oldController,
                   obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Mật khẩu cũ',
+                  decoration: InputDecoration(
+                    labelText: context.localization.oldPassword,
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -104,8 +105,8 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                 TextField(
                   controller: _newController,
                   obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Mật khẩu mới',
+                  decoration: InputDecoration(
+                    labelText: context.localization.newPassword,
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -113,8 +114,8 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                 TextField(
                   controller: _confirmController,
                   obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Xác nhận mật khẩu mới',
+                  decoration: InputDecoration(
+                    labelText: context.localization.newPasswordConfirm,
                     border: OutlineInputBorder(),
                   ),
                 ),
@@ -123,7 +124,7 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                     ? const CircularProgressIndicator()
                     : ElevatedButton(
                   onPressed: _submit,
-                  child: const Text('Đặt lại mật khẩu'),
+                  child: Text(context.localization.resetPassword),
                 ),
               ],
             ),

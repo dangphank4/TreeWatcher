@@ -1,7 +1,5 @@
-import 'dart:ffi';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_api/core/extensions/localized_extendsion.dart';
 
 class WeatherParameter extends StatelessWidget{
 
@@ -14,7 +12,17 @@ class WeatherParameter extends StatelessWidget{
   final double precipitation;
   final double uvIndex;
 
-  const WeatherParameter({super.key, required this.date, required this.weatherCode, required this.tempMax, required this.tempMin, required this.windSpeed, required this.windDirection, required this.precipitation, required this.uvIndex,});
+  const WeatherParameter({
+    super.key,
+    required this.date,
+    required this.weatherCode,
+    required this.tempMax,
+    required this.tempMin,
+    required this.windSpeed,
+    required this.windDirection,
+    required this.precipitation,
+    required this.uvIndex,
+  });
 
   IconData getWeatherIcon(int code) {
     switch (code) {
@@ -69,22 +77,22 @@ class WeatherParameter extends StatelessWidget{
           ),
           const SizedBox(height: 8),
           Text(
-            "Max: ${tempMax}°C, Min: ${tempMin}°C",
+            "${context.localization.max}: $tempMax°C, ${context.localization.min}: $tempMin°C",
             style: const TextStyle(
                 color: Colors.white70, fontSize: 14),
           ),
           Text(
-            "Wind: ${windSpeed} km/h, ${windDirection}°",
+            "${context.localization.wind}: $windSpeed km/h, $windDirection°",
             style: const TextStyle(
                 color: Colors.white70, fontSize: 14),
           ),
           Text(
-            "Precipitation: ${precipitation} mm",
+            "${context.localization.precipitation}: $precipitation mm",
             style: const TextStyle(
                 color: Colors.white70, fontSize: 14),
           ),
           Text(
-            "UV Index: ${uvIndex}",
+            "${context.localization.uvIndex}: $uvIndex",
             style: const TextStyle(
                 color: Colors.white70, fontSize: 14),
           ),

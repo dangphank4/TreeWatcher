@@ -63,4 +63,86 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logOut => 'Log Out';
+
+  @override
+  String get pleaseEnterAValidEmail => 'Please enter a valid email';
+
+  @override
+  String get forgotPassword => 'Forgot password';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get sendRequest => 'Send request';
+
+  @override
+  String get enterEmailToResetPassword => 'Enter email to reset password';
+
+  @override
+  String get register => 'Register';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get confirmPassword => 'Confirm password';
+
+  @override
+  String get pleaseEnterRightPassword => 'Please enter right password';
+
+  @override
+  String get pleaseEnterCompleteInformation =>
+      'Please enter complete information';
+
+  @override
+  String get youHaveAnAccount => 'You have an account? SignIn';
+
+  @override
+  String get logIn => 'LogIn';
+
+  @override
+  String get createAnAccount => 'Create an account';
+
+  @override
+  String get newPasswordDoesNotMatch => 'New password doesn\'t match';
+
+  @override
+  String get resetPasswordSuccess => 'Reset password successful';
+
+  @override
+  String get resetPassword => 'Reset pasword';
+
+  @override
+  String get oldPassword => 'Old password';
+
+  @override
+  String get newPassword => 'New password';
+
+  @override
+  String get newPasswordConfirm => 'Confirm new pasword';
+
+  @override
+  String get max => 'Max';
+
+  @override
+  String get min => 'Min';
+
+  @override
+  String get wind => 'Wind';
+
+  @override
+  String get precipitation => 'Precipitation';
+
+  @override
+  String get uvIndex => 'UV Index';
+
+  @override
+  String get cantLoadWeatherData => 'Can\'t load weather data';
+
+  @override
+  String get enteAreaName => 'Enter area name';
+
+  @override
+  String get area => 'Area';
 }

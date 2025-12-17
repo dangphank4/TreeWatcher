@@ -63,4 +63,86 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get logOut => 'Đăng xuất';
+
+  @override
+  String get pleaseEnterAValidEmail => 'Vui lòng nhập email hợp lệ';
+
+  @override
+  String get forgotPassword => 'Quên mật khẩu';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get sendRequest => 'Gửi yêu cầu';
+
+  @override
+  String get enterEmailToResetPassword =>
+      'Nhập email để nhận link đặt lại mật khẩu';
+
+  @override
+  String get register => 'Đăng ký';
+
+  @override
+  String get password => 'Mật khẩu';
+
+  @override
+  String get confirmPassword => 'Nhập lại mật khẩu';
+
+  @override
+  String get pleaseEnterRightPassword => 'Vui lòng nhập đúng mật khẩu';
+
+  @override
+  String get pleaseEnterCompleteInformation => 'Vui lòng nhập đủ thông tin';
+
+  @override
+  String get youHaveAnAccount => 'Bạn đã có tài khoản? Đăng nhập';
+
+  @override
+  String get logIn => 'Đăng nhập';
+
+  @override
+  String get createAnAccount => 'Tạo tài khoản';
+
+  @override
+  String get newPasswordDoesNotMatch => 'Mật khẩu mới không khớp';
+
+  @override
+  String get resetPasswordSuccess => 'Đặt lại mật khẩu thành công';
+
+  @override
+  String get resetPassword => 'Đặt lại mật khẩu';
+
+  @override
+  String get oldPassword => 'Mật khẩu cũ';
+
+  @override
+  String get newPassword => 'Mật khẩu mới';
+
+  @override
+  String get newPasswordConfirm => 'Xác nhận mật khẩu mới';
+
+  @override
+  String get max => 'Tối đa';
+
+  @override
+  String get min => 'Tối thiểu';
+
+  @override
+  String get wind => 'Tốc độ gió';
+
+  @override
+  String get precipitation => 'Lượng mưa';
+
+  @override
+  String get uvIndex => 'Tia UV';
+
+  @override
+  String get cantLoadWeatherData => 'Không thể tải dữ liệu thời tiết';
+
+  @override
+  String get enteAreaName => 'Nhập tên khu vực';
+
+  @override
+  String get area => 'Địa điểm';
 }
