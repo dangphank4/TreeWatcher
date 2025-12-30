@@ -116,7 +116,7 @@ class _SignInPageState extends State<SignInPage> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    NavigationHelper.replace('${AppRoutes.moduleAuth}${AuthModuleRoutes.forgotPassword}');
+                    NavigationHelper.push('${AppRoutes.moduleAuth}${AuthModuleRoutes.forgotPassword}');
                   },
                   child: Text(
                     'Fogot Password?',
@@ -157,12 +157,13 @@ class _SignInPageState extends State<SignInPage> {
                     // Giả lập loading
                     await Future.delayed(const Duration(milliseconds: 500));
 
-                    // NavigationHelper.replace(
-                    //   '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
-                    // );
                     Utils.debugLog('Login successed}');
                     _authBloc.add(
                       AuthLoginRequested(email: email, password: password),
+                    );
+
+                    NavigationHelper.replace(
+                      '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
                     );
                   },
                   child: const Text(
@@ -176,7 +177,7 @@ class _SignInPageState extends State<SignInPage> {
                 width: double.infinity,
                 child: TextButton(
                   onPressed: () {
-                    NavigationHelper.replace(
+                    NavigationHelper.push(
                       '${AppRoutes.moduleAuth}${AuthModuleRoutes.register}',
                     );
                   },

@@ -263,7 +263,6 @@ class _AddDevicePageState extends State<AddDevicePage> {
         ),
       );
     } else {
-      // Bước 2: Lưu thiết bị
       final deviceName = nameCtrl.text.trim();
 
       if (deviceName.isEmpty) {

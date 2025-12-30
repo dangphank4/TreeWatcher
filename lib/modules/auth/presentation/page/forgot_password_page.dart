@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
 import 'package:flutter_api/core/helpers/navigation_helper.dart';
-import 'package:flutter_api/modules/app/app_module.dart';
 import 'package:flutter_api/modules/auth/general/auth_module_routes.dart';
 import 'package:flutter_api/modules/auth/presentation/blocs/auth_bloc.dart';
 import 'package:flutter_api/modules/auth/presentation/blocs/auth_event.dart';
@@ -64,7 +62,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             ),
           );
           // Tự động quay về SignIn page
-          NavigationHelper.replace('${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}');
+          NavigationHelper.reset('${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}');
         } else if (state is AuthResetPasswordFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(

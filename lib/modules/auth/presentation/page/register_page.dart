@@ -3,7 +3,6 @@ import 'package:flutter_api/core/constants/app_routes.dart';
 import 'package:flutter_api/core/constants/app_styles.dart';
 import 'package:flutter_api/core/extensions/num_extendsion.dart';
 import 'package:flutter_api/core/helpers/navigation_helper.dart';
-import 'package:flutter_api/core/utils/globals.dart';
 import 'package:flutter_api/core/utils/utils.dart';
 import 'package:flutter_api/modules/auth/general/auth_module_routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -43,8 +42,10 @@ class _RegisterPageState extends State<RegisterPage> {
       listener: (context, state) {
         if (state is AuthLoading) {
           // Có thể show loading indicator
+          Utils.debugLog('[AUTH] Loading...');
         } else if (state is AuthAuthenticated) {
           Utils.debugLog('Register success: ${state.data}');
+          Utils.debugLog('[AUTH] Data: ${state.data}');
           // Chuyển sang màn hình chính
           NavigationHelper.replace(
             '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
@@ -178,9 +179,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     // Giả lập loading
                     await Future.delayed(const Duration(milliseconds: 500));
 
-                    // NavigationHelper.replace(
-                    //   '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
-                    // );
                     Utils.debugLog('Regisiter successed}');
                     _authBloc.add(
                       AuthRegisterRequested(
@@ -189,6 +187,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     );
 
+                    NavigationHelper.reset(
+                      '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
+                    );
                   },
                   child: const Text(
                     'Đăng ký',
