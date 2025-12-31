@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
+import 'package:flutter_api/core/extensions/localized_extendsion.dart';
 import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/modules/auth/general/auth_module_routes.dart';
 import 'package:flutter_api/modules/auth/presentation/blocs/auth_bloc.dart';
@@ -26,21 +27,19 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     super.dispose();
   }
 
-  Future<void> _sendResetEmail() async {
+  Future<void> _sendResetEmail({required String requestLog}) async {
     final email = _emailController.text.trim();
 
     if (email.isEmpty || !email.contains('@')) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Vui lòng nhập email hợp lệ')),
+        SnackBar(content: Text(requestLog)),
       );
       return;
     }
 
     setState(() => _isLoading = true);
 
-    _authBloc.add(
-      AuthResetPasswordRequested(email: email)
-    );
+    _authBloc.add(AuthResetPasswordRequested(email: email));
   }
 
   @override
@@ -62,30 +61,29 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             ),
           );
           // Tự động quay về SignIn page
-          NavigationHelper.reset('${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}');
+          NavigationHelper.replace(
+            '${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}',
+          );
         } else if (state is AuthResetPasswordFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.error),
-              backgroundColor: Colors.red,
-            ),
+            SnackBar(content: Text(state.error), backgroundColor: Colors.red),
           );
         }
       },
       child: Scaffold(
-        appBar: AppBar(title: const Text('Quên mật khẩu')),
+        appBar: AppBar(title: Text(context.localization.forgotPassword)),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Nhập email để nhận link đặt lại mật khẩu'),
+              Text(context.localization.enterEmailToResetPassword),
               const SizedBox(height: 16),
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                  labelText: 'Email',
+                decoration: InputDecoration(
+                  labelText: context.localization.email,
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -93,14 +91,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               _isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : ElevatedButton(
-                onPressed: _sendResetEmail,
-                child: const Text('Gửi yêu cầu'),
-              ),
+                      onPressed: (){
+                        _sendResetEmail(requestLog: context.localization.pleaseEnterAValidEmail);
+                      },
+                      child: Text(context.localization.sendRequest),
+                    ),
             ],
           ),
         ),
       ),
     );
   }
-
 }

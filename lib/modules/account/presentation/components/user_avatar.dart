@@ -12,7 +12,7 @@ class UserAvatar extends StatelessWidget {
     Key? key,
     required this.imageUrl,
     this.isNetwork = true,
-    this.size = 60,
+    this.size = 80,
     this.borderColor = Colors.white,
     this.borderWidth = 2,
     this.backgroundColor = Colors.grey,

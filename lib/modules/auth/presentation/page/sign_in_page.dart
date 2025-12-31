@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
 import 'package:flutter_api/core/constants/app_styles.dart';
+import 'package:flutter_api/core/extensions/localized_extendsion.dart';
 import 'package:flutter_api/core/extensions/num_extendsion.dart';
 import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/core/utils/globals.dart';
@@ -60,14 +61,14 @@ class _SignInPageState extends State<SignInPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text('LogIn', style: Styles.h1.smb.copyWith(color: Colors.white)),
+              Text(context.localization.logIn, style: Styles.h1.smb.copyWith(color: Colors.white)),
               SizedBox(height: 20),
               // Email
               TextField(
                 controller: _emailController,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  labelText: 'Email',
+                  labelText: context.localization.email,
 
                   labelStyle: const TextStyle(color: Colors.white70),
                   border: OutlineInputBorder(
@@ -87,7 +88,7 @@ class _SignInPageState extends State<SignInPage> {
                 obscureText: _obscurePassword,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  labelText: 'Mật khẩu',
+                  labelText: context.localization.password,
                   labelStyle: const TextStyle(color: Colors.white70),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -116,10 +117,10 @@ class _SignInPageState extends State<SignInPage> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: () {
-                    NavigationHelper.push('${AppRoutes.moduleAuth}${AuthModuleRoutes.forgotPassword}');
+                    NavigationHelper.navigate('${AppRoutes.moduleAuth}${AuthModuleRoutes.forgotPassword}');
                   },
                   child: Text(
-                    'Fogot Password?',
+                    '${context.localization.forgotPassword}?',
                     style: Styles.sfNormal.regular.copyWith(
                       color: Colors.lightBlueAccent,
                       decoration: TextDecoration.underline,
@@ -147,8 +148,8 @@ class _SignInPageState extends State<SignInPage> {
 
                     if (email.isEmpty || password.isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text('Vui lòng nhập đủ thông tin'),
+                       SnackBar(
+                          content: Text(context.localization.pleaseEnterCompleteInformation),
                         ),
                       );
                       return;
@@ -157,17 +158,16 @@ class _SignInPageState extends State<SignInPage> {
                     // Giả lập loading
                     await Future.delayed(const Duration(milliseconds: 500));
 
+                    // NavigationHelper.replace(
+                    //   '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
+                    // );
                     Utils.debugLog('Login successed}');
                     _authBloc.add(
                       AuthLoginRequested(email: email, password: password),
                     );
-
-                    NavigationHelper.replace(
-                      '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
-                    );
                   },
-                  child: const Text(
-                    'Đăng nhập',
+                  child: Text(
+                    context.localization.logIn,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -177,11 +177,11 @@ class _SignInPageState extends State<SignInPage> {
                 width: double.infinity,
                 child: TextButton(
                   onPressed: () {
-                    NavigationHelper.push(
+                    NavigationHelper.navigate(
                       '${AppRoutes.moduleAuth}${AuthModuleRoutes.register}',
                     );
                   },
-                  child: Text('Create an account?'),
+                  child: Text('${context.localization.createAnAccount}?'),
                 ),
               ),
             ],

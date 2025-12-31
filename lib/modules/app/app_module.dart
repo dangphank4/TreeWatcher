@@ -1,7 +1,8 @@
 import 'package:flutter_api/modules/app/presentation/blocs/app_bloc.dart';
 import 'package:flutter_api/modules/app/presentation/pages/main_page.dart';
+import 'package:flutter_api/modules/app/presentation/pages/splash_page.dart';
+import 'package:flutter_api/modules/app/presentation/pages/update_user_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-
 import 'data/datasources/app_api.dart';
 import 'data/repositories/app_repository.dart';
 import 'general/app_module_routes.dart';
@@ -24,5 +25,7 @@ class AppModule extends Module {
   void routes(RouteManager r) {
     super.routes(r);
     r.child(AppModuleRoutes.main, child: (context) => const MainPage());
+    r.child(AppModuleRoutes.updateUser, child: (context) => UpdateUserPage());
+    r.child(AppModuleRoutes.splash, child: (context) => SplashPage());
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
 import 'package:flutter_api/core/constants/app_styles.dart';
+import 'package:flutter_api/core/extensions/localized_extendsion.dart';
 import 'package:flutter_api/core/extensions/num_extendsion.dart';
 import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/core/utils/utils.dart';
@@ -42,10 +43,8 @@ class _RegisterPageState extends State<RegisterPage> {
       listener: (context, state) {
         if (state is AuthLoading) {
           // Có thể show loading indicator
-          Utils.debugLog('[AUTH] Loading...');
         } else if (state is AuthAuthenticated) {
           Utils.debugLog('Register success: ${state.data}');
-          Utils.debugLog('[AUTH] Data: ${state.data}');
           // Chuyển sang màn hình chính
           NavigationHelper.replace(
             '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
@@ -64,7 +63,7 @@ class _RegisterPageState extends State<RegisterPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Register',
+                context.localization.register,
                 style: Styles.h1.smb.copyWith(
                     color: Colors.white
                 ),
@@ -75,7 +74,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 controller: _emailController,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  labelText: 'Email',
+                  labelText: context.localization.email,
 
                   labelStyle: const TextStyle(color: Colors.white70),
                   border: OutlineInputBorder(
@@ -95,7 +94,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 obscureText: _obscurePassword,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  labelText: 'Mật khẩu',
+                  labelText: context.localization.password,
                   labelStyle: const TextStyle(color: Colors.white70),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -123,7 +122,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 obscureText: _obscurerConfirmPassword,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  labelText: 'Mật khẩu',
+                  labelText: context.localization.confirmPassword,
                   labelStyle: const TextStyle(color: Colors.white70),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -161,8 +160,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     final email = _emailController.text;
                     if(_passwordConfirmController.text != _passwordController.text){
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Vui lòng nhập đúng mật khẩu')),
+                        SnackBar(
+                            content: Text(context.localization.pleaseEnterRightPassword)),
                       );
                       return;
                     }
@@ -170,8 +169,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
                     if (email.isEmpty || password == '') {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text('Vui lòng nhập đủ thông tin')),
+                        SnackBar(
+                            content: Text(context.localization.pleaseEnterCompleteInformation)),
                       );
                       return;
                     }
@@ -179,7 +178,10 @@ class _RegisterPageState extends State<RegisterPage> {
                     // Giả lập loading
                     await Future.delayed(const Duration(milliseconds: 500));
 
-                    Utils.debugLog('Regisiter successed}');
+                    // NavigationHelper.replace(
+                    //   '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
+                    // );
+                    Utils.debugLog('Regisiter successed');
                     _authBloc.add(
                       AuthRegisterRequested(
                         email: email,
@@ -187,12 +189,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     );
 
-                    NavigationHelper.reset(
-                      '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
-                    );
                   },
-                  child: const Text(
-                    'Đăng ký',
+                  child: Text(
+                    context.localization.register,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -204,7 +203,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     onPressed: (){
                       NavigationHelper.replace('${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}');
                     },
-                    child: Text('You have an account? SignIn')
+                    child: Text(context.localization.youHaveAnAccount)
                 ),
               )
             ],

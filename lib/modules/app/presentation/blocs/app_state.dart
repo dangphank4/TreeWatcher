@@ -6,13 +6,9 @@ const Map<String, dynamic> defaultConfig = {};
 class AppState extends Equatable {
   final int isConfigLoaded;
   final Map<String, dynamic> config;
-  final String? selfId;
-  final String? peerId;
   const AppState._({
     this.config = defaultConfig,
     this.isConfigLoaded = -1,
-    this.selfId,
-    this.peerId,
   });
 
   @override
@@ -29,16 +25,12 @@ class AppState extends Equatable {
     return AppState._(
       config: {...defaultConfig, ...this.config, ...config},
       isConfigLoaded: isConfigLoaded ?? this.isConfigLoaded,
-      selfId: selfId,
-      peerId: peerId,
     );
   }
 
   AppState.fromJson(Map<String, dynamic> json)
       : config = {...defaultConfig, ...(json['config'] ?? {})},
-        isConfigLoaded = json['isConfigLoaded'] ?? -1,
-        selfId = '',
-        peerId = '';
+        isConfigLoaded = json['isConfigLoaded'] ?? -1;
   Map<String, dynamic> toJson() => {
     'config': config,
     'isConfigLoaded': isConfigLoaded,

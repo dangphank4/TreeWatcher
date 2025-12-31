@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_api/core/constants/app_styles.dart';
+import 'package:flutter_api/core/extensions/localized_extendsion.dart';
 import 'package:flutter_api/core/extensions/num_extendsion.dart';
 import 'package:flutter_api/core/models/weather_model.dart';
 import 'package:flutter_api/modules/weather/data/datasource/weather_api.dart';
@@ -136,13 +137,13 @@ class _WeatherPageState extends State<WeatherPage> {
   Color? getBackgroundColor(double? temp) {
     if (temp == null) return null;
     if (temp <= 0) {
-      return Colors.blueGrey; // lạnh đậm
+      return Colors.blueGrey.shade300; // lạnh đậm
     } else if (temp <= 10) {
       return Colors.lightBlueAccent.shade100; // lạnh nhẹ
     } else if (temp <= 20) {
-      return Colors.blue.shade200; // mát
+      return Colors.blue.shade100; // mát
     } else if (temp <= 28) {
-      return Colors.orangeAccent.shade100; // ấm nhẹ
+      return Colors.blue.shade50; // ấm nhẹ
     } else if (temp <= 35) {
       return Colors.orangeAccent.shade200; // nóng
     } else {
@@ -167,15 +168,15 @@ class _WeatherPageState extends State<WeatherPage> {
         title: Container(
           padding: const EdgeInsets.only(left: 16, bottom: 8, top: 16),
           child: Text(
-            "Weather",
-            style: Styles.h1.regular.copyWith(color: Colors.black),
+            context.localization.weather,
+            style: Styles.h1.smb.copyWith(color: Colors.black),
           ),
         ),
       ),
       body: loading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator())
           : error
-          ? const Center(child: Text("Không thể tải dữ liệu thời tiết"))
+          ? Center(child: Text(context.localization.cantLoadWeatherData))
           : Container(
               // 🎨 NỀN ĐẸP
               decoration: BoxDecoration(
@@ -215,7 +216,7 @@ class _WeatherPageState extends State<WeatherPage> {
                               decoration: InputDecoration(
                                 fillColor: Colors.white.withValues(alpha: 0.85),
                                 filled: true,
-                                labelText: "Nhập thành phố/tỉnh",
+                                labelText: context.localization.enteAreaName,
                                 labelStyle: TextStyle(color: Colors.black54),
                                 contentPadding: EdgeInsets.symmetric(
                                   horizontal: 20,
@@ -331,7 +332,7 @@ class _WeatherPageState extends State<WeatherPage> {
               children: [
                 // CITY NAME
                 Text(
-                  cityName ?? "Địa điểm",
+                  cityName ?? context.localization.area,
                   style: Styles.h1.smb.copyWith(color: Colors.black45),
                 ),
                 SizedBox(height: 6),

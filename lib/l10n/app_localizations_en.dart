@@ -63,4 +63,139 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logOut => 'Log Out';
+
+  @override
+  String get pleaseEnterAValidEmail => 'Please enter a valid email';
+
+  @override
+  String get forgotPassword => 'Forgot password';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get sendRequest => 'Send request';
+
+  @override
+  String get enterEmailToResetPassword => 'Enter email to reset password';
+
+  @override
+  String get register => 'Register';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get confirmPassword => 'Confirm password';
+
+  @override
+  String get pleaseEnterRightPassword => 'Please enter right password';
+
+  @override
+  String get pleaseEnterCompleteInformation =>
+      'Please enter complete information';
+
+  @override
+  String get youHaveAnAccount => 'You have an account? SignIn';
+
+  @override
+  String get logIn => 'LogIn';
+
+  @override
+  String get createAnAccount => 'Create an account';
+
+  @override
+  String get newPasswordDoesNotMatch => 'New password doesn\'t match';
+
+  @override
+  String get resetPasswordSuccess => 'Reset password successful';
+
+  @override
+  String get resetPassword => 'Reset pasword';
+
+  @override
+  String get oldPassword => 'Old password';
+
+  @override
+  String get newPassword => 'New password';
+
+  @override
+  String get newPasswordConfirm => 'Confirm new pasword';
+
+  @override
+  String get max => 'Max';
+
+  @override
+  String get min => 'Min';
+
+  @override
+  String get wind => 'Wind';
+
+  @override
+  String get precipitation => 'Precipitation';
+
+  @override
+  String get uvIndex => 'UV Index';
+
+  @override
+  String get cantLoadWeatherData => 'Can\'t load weather data';
+
+  @override
+  String get enteAreaName => 'Enter area name';
+
+  @override
+  String get area => 'Area';
+
+  @override
+  String get updateUser => 'Update user';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get areYouReallyWantToChangePassword =>
+      'Are you really want to change password';
+
+  @override
+  String get areYouReallyWantToChangeAccountInfo =>
+      'Are you really want to change account information';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get accept => 'Accept';
+
+  @override
+  String get updateAccount => 'Update Account';
+
+  @override
+  String get fullName => 'Full Name';
+
+  @override
+  String get enterYourFullName => 'Enter your full name';
+
+  @override
+  String get emailHint => 'Your email address';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get phoneHint => 'Enter your phone number';
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get accountTitle => 'My Account';
 }
