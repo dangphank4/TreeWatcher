@@ -47,7 +47,11 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
     _subscribeUser();
   }
 
-  void _subscribeUser() {
+  Future<void> _subscribeUser() async {
+    setState(() {
+      _loading = true;
+    });
+
     _userSubscription = repository.subscribeUser().listen((doc) {
       if (!doc.exists || doc.data() == null) return;
 
@@ -64,6 +68,9 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
           _gender = Gender.female;
         }
       });
+    });
+    setState(() {
+      _loading = false;
     });
   }
 
@@ -122,139 +129,143 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
       ),
       backgroundColor: Colors.grey.shade900,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              20.verticalSpace,
-              Center(
-                child: Container(
-                  width: 150,
-                  height: 150,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    border: Border.all(width: 2, color: Colors.greenAccent),
-                  ),
-                  child: ClipOval(
-                    child: Image.asset(
-                      gender == context.localization.male
-                          ? AppImages.maleImg
-                          : AppImages.femaleImg,
-                      fit: BoxFit.contain,
+        child: RefreshIndicator(
+          onRefresh: _subscribeUser,
+          child: SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: Column(
+              children: [
+                20.verticalSpace,
+                Center(
+                  child: Container(
+                    width: 150,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(width: 2, color: Colors.greenAccent),
                     ),
-                  ),
-                ),
-              ),
-              10.verticalSpace,
-              _buildField(
-                controller: nameController,
-                label: context.localization.fullName,
-                hint: context.localization.enterYourFullName,
-                textColor: Colors.black,
-                hintColor: Colors.grey,
-                labelColor: Colors.green.shade300, // màu tiêu đề
-              ),
-
-              _buildField(
-                controller: emailController,
-                label: context.localization.email,
-                hint: context.localization.emailHint,
-                readOnly: true,
-                textColor: Colors.black87,
-                hintColor: Colors.grey,
-                labelColor: Colors.green.shade300,
-              ),
-
-              10.verticalSpace,
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.localization.gender,
-                      style: Styles.medium.smb.copyWith(
-                        color: Colors.green.shade300,
+                    child: ClipOval(
+                      child: Image.asset(
+                        gender == context.localization.male
+                            ? AppImages.maleImg
+                            : AppImages.femaleImg,
+                        fit: BoxFit.contain,
                       ),
                     ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: RadioListTile<Gender>(
-                            title: Text(
-                              context.localization.male,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            value: Gender.male,
-                            groupValue: _gender,
-                            onChanged: (value) =>
-                                setState(() => _gender = value),
-                          ),
-                        ),
-                        Expanded(
-                          child: RadioListTile<Gender>(
-                            title: Text(
-                              context.localization.female,
-                              style: TextStyle(color: Colors.white),
-                            ),
-                            value: Gender.female,
-                            groupValue: _gender,
-                            onChanged: (value) =>
-                                setState(() => _gender = value),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+                10.verticalSpace,
+                _buildField(
+                  controller: nameController,
+                  label: context.localization.fullName,
+                  hint: context.localization.enterYourFullName,
+                  textColor: Colors.black,
+                  hintColor: Colors.grey,
+                  labelColor: Colors.green.shade300, // màu tiêu đề
+                ),
 
-              10.verticalSpace,
-              _buildField(
-                controller: phoneController,
-                label: context.localization.phoneNumber,
-                hint: context.localization.phoneHint,
-                keyboardType: TextInputType.phone,
-                textColor: Colors.black,
-                hintColor: Colors.grey,
-                labelColor: Colors.green.shade300,
-              ),
-              20.verticalSpace,
-              TextButton(
-                onPressed: () async {
-                  final confirm = await showConfirmDialog(
-                    context: context,
-                    title: context.localization.confirm,
-                    content:
-                    '${context.localization.areYouReallyWantToChangePassword}?',
-                  );
-                  if(confirm == true) {
-                    _saveUser();
-                  }
-                },
-                child: Container(
-                  alignment: Alignment.center,
-                  width: 100,
-                  height: 34,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20),
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.deepPurple.shade400,
-                        Colors.deepPurple.shade200,
-                      ],
-                      begin: Alignment.bottomLeft,
-                      end: Alignment.topRight,
-                    ),
-                    border: Border.all(width: 1.5, color: Colors.white),
-                  ),
-                  child: Text(
-                    context.localization.save,
-                    style: Styles.large.smb.copyWith(color: Colors.white),
+                _buildField(
+                  controller: emailController,
+                  label: context.localization.email,
+                  hint: context.localization.emailHint,
+                  readOnly: true,
+                  textColor: Colors.black87,
+                  hintColor: Colors.grey,
+                  labelColor: Colors.green.shade300,
+                ),
+
+                10.verticalSpace,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        context.localization.gender,
+                        style: Styles.medium.smb.copyWith(
+                          color: Colors.green.shade300,
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: RadioListTile<Gender>(
+                              title: Text(
+                                context.localization.male,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              value: Gender.male,
+                              groupValue: _gender,
+                              onChanged: (value) =>
+                                  setState(() => _gender = value),
+                            ),
+                          ),
+                          Expanded(
+                            child: RadioListTile<Gender>(
+                              title: Text(
+                                context.localization.female,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                              value: Gender.female,
+                              groupValue: _gender,
+                              onChanged: (value) =>
+                                  setState(() => _gender = value),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
+
+                10.verticalSpace,
+                _buildField(
+                  controller: phoneController,
+                  label: context.localization.phoneNumber,
+                  hint: context.localization.phoneHint,
+                  keyboardType: TextInputType.phone,
+                  textColor: Colors.black,
+                  hintColor: Colors.grey,
+                  labelColor: Colors.green.shade300,
+                ),
+                20.verticalSpace,
+                TextButton(
+                  onPressed: () async {
+                    final confirm = await showConfirmDialog(
+                      context: context,
+                      title: context.localization.confirm,
+                      content:
+                      '${context.localization.areYouReallyWantToChangePassword}?',
+                    );
+                    if(confirm == true) {
+                      _saveUser();
+                    }
+                  },
+                  child: Container(
+                    alignment: Alignment.center,
+                    width: 100,
+                    height: 34,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      gradient: LinearGradient(
+                        colors: [
+                          Colors.deepPurple.shade400,
+                          Colors.deepPurple.shade200,
+                        ],
+                        begin: Alignment.bottomLeft,
+                        end: Alignment.topRight,
+                      ),
+                      border: Border.all(width: 1.5, color: Colors.white),
+                    ),
+                    child: Text(
+                      context.localization.save,
+                      style: Styles.large.smb.copyWith(color: Colors.white),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -1,9 +1,13 @@
 import 'package:flutter_api/modules/auth/data/datasource/auth_api.dart';
+import 'package:flutter_api/modules/auth/data/datasource/user_api.dart';
+
+import '../../../../core/utils/utils.dart';
 
 class AuthRepository {
   final AuthApi api;
+  final UserApi userApi;
 
-  AuthRepository({required this.api});
+  AuthRepository({required this.api , required this.userApi});
 
   /// Login: trả về Map chứa token, userId, username
   Future<Map<String, String>?> login({
@@ -12,14 +16,19 @@ class AuthRepository {
   }) async {
     try {
       final userCredential = await api.login(email: email, password: password);
+
+      final user = userCredential.user!;
       final token = await api.getIdToken(userCredential.user!);
-      final userId = userCredential.user!.uid;
-      final username = userCredential.user!.email ?? '';
+
+      await userApi.ensureUser(
+        uid: user.uid,
+        email: user.email!,
+      );
 
       return {
         'token': token,
-        'userId': userId,
-        'username': username,
+        'userId': user.uid,
+        'username': user.email ?? "user",
       };
     } catch (_) {
       return null;
@@ -33,19 +42,27 @@ class AuthRepository {
   }) async {
     try {
       final userCredential = await api.register(email: email, password: password);
-      final token = await api.getIdToken(userCredential.user!);
-      final userId = userCredential.user!.uid;
-      final username = userCredential.user!.email ?? '';
+
+      final user = userCredential.user!;
+      final token = await api.getIdToken(user);
+
+      await userApi.ensureUser(
+        uid: user.uid,
+        email: user.email!,
+      );
 
       return {
         'token': token,
-        'userId': userId,
-        'username': username,
+        'userId': user.uid,
+        'username': user.email ?? '',
       };
-    } catch (_) {
+
+    } catch (e) {
+      Utils.debugLog('[REGISTER] FAILED: $e');
       return null;
     }
   }
+
 
   /// Logout
   Future<void> logout() async {
