@@ -145,4 +145,57 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get area => 'Địa điểm';
+
+  @override
+  String get updateUser => 'Cập nhật thông tin';
+
+  @override
+  String get confirm => 'Xác nhận';
+
+  @override
+  String get areYouReallyWantToChangePassword =>
+      'Bạn có chắc chắn muốn đổi mật khẩu không';
+
+  @override
+  String get areYouReallyWantToChangeAccountInfo =>
+      'Bạn có chắc chắn muốn đổi thông tin tài khoản không';
+
+  @override
+  String get delete => 'Huỷ';
+
+  @override
+  String get accept => 'Đồng ý';
+
+  @override
+  String get updateAccount => 'Cập nhật tài khoản';
+
+  @override
+  String get fullName => 'Họ và tên';
+
+  @override
+  String get enterYourFullName => 'Nhập họ và tên';
+
+  @override
+  String get emailHint => 'Địa chỉ email của bạn';
+
+  @override
+  String get phoneNumber => 'Số điện thoại';
+
+  @override
+  String get phoneHint => 'Nhập số điện thoại';
+
+  @override
+  String get gender => 'Giới tính';
+
+  @override
+  String get male => 'Nam';
+
+  @override
+  String get female => 'Nữ';
+
+  @override
+  String get save => 'Lưu';
+
+  @override
+  String get accountTitle => 'Tài khoản của tôi';
 }

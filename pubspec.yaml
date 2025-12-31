@@ -34,6 +34,7 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  dartz: ^0.10.1
   dio: ^5.8.0+1
   bloc: ^9.0.0
   flutter_bloc: ^9.1.1
@@ -60,6 +61,10 @@ dependencies:
   http: ^1.2.0
   firebase_database: ^12.1.0
   mobile_scanner: ^3.5.0
+  cloud_firestore: ^6.1.1
+  firebase_analytics: ^12.1.0
+  image_picker: ^1.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -121,7 +126,20 @@ flutter:
   assets:
     - .env.development
     - .env.production
-
+    - assets/images/
+    - assets/icons/
+    - assets/fonts/
+  fonts:
+    - family: BeVietnamPro
+      fonts:
+        - asset: assets/fonts/BeVietnamPro/BeVietnamPro-Bold.ttf
+          weight: 900
+        - asset: assets/fonts/BeVietnamPro/BeVietnamPro-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/BeVietnamPro/BeVietnamPro-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/BeVietnamPro/BeVietnamPro-Regular.ttf
+          weight: 400
 
 flutter_intl:
   enabled: true

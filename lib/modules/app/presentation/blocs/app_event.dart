@@ -9,8 +9,3 @@ sealed class AppEvent extends Equatable {
 
 final class AppConfigRequested extends AppEvent {}
 
-final class PeersRequested extends AppEvent {
-  final String selfId;
-  final List<dynamic> peers;
-  const PeersRequested({required this.selfId, required this.peers});
-}

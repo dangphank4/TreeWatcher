@@ -7,7 +7,7 @@ import 'device_state.dart';
 class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
   final DeviceRepository repo;
 
-  DeviceBloc({required this.repo}) : super(DeviceInitial()) {
+  DeviceBloc({required this.repo}) : super(const DeviceState.initial()) {
     on<DeviceCheckRequested>(_onCheckDevice);
     on<DeviceAddRequested>(_onAddDevice);
   }
@@ -16,7 +16,11 @@ class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
       DeviceCheckRequested event,
       Emitter<DeviceState> emit,
       ) async {
-    emit(DeviceLoading());
+    // Loading
+    emit(state.setState(
+      isLoading: true,
+      errorMessage: null,
+    ));
 
     final result = await repo.checkDevice(
       sensorId: event.sensorId,
@@ -25,19 +29,32 @@ class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
 
     switch (result) {
       case "OK":
-        emit(DeviceCheckSuccess(sensorId: event.sensorId));
+        emit(state.setState(
+          isLoading: false,
+          sensorId: event.sensorId,
+          errorMessage: null,
+        ));
         break;
 
       case "ERROR:NOT_FOUND":
-        emit(const DeviceFailure("Thiết bị không tồn tại"));
+        emit(state.setState(
+          isLoading: false,
+          errorMessage: "Thiết bị không tồn tại",
+        ));
         break;
 
       case "ERROR:WRONG_PASSWORD":
-        emit(const DeviceFailure("Sai mật khẩu thiết bị"));
+        emit(state.setState(
+          isLoading: false,
+          errorMessage: "Sai mật khẩu thiết bị",
+        ));
         break;
 
       default:
-        emit(const DeviceFailure("Lỗi không xác định"));
+        emit(state.setState(
+          isLoading: false,
+          errorMessage: "Lỗi không xác định",
+        ));
         break;
     }
   }
@@ -46,7 +63,10 @@ class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
       DeviceAddRequested event,
       Emitter<DeviceState> emit,
       ) async {
-    emit(DeviceLoading());
+    emit(state.setState(
+      isLoading: true,
+      errorMessage: null,
+    ));
 
     await repo.addDevice(
       sensorId: event.sensorId,
@@ -54,6 +74,10 @@ class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
       userId: Globals.globalUserUUID!,
     );
 
-    emit(DeviceSuccess(deviceName: event.deviceName));
+    emit(state.setState(
+      isLoading: false,
+      deviceName: event.deviceName,
+      errorMessage: null,
+    ));
   }
 }

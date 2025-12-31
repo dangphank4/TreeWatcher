@@ -21,7 +21,6 @@ class UserUtility extends StatelessWidget {
       onTap: onPress,
       borderRadius: BorderRadius.circular(20),
       child: Container(
-        margin: EdgeInsets.only(left: 8, right: 8, top: 8),
         padding: EdgeInsets.only(left: 16, top: 8, bottom: 8),
         width: double.infinity,
         height: 60,

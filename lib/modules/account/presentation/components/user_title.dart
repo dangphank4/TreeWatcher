@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_api/core/constants/app_images.dart';
 import 'package:flutter_api/core/constants/app_styles.dart';
 import 'package:flutter_api/core/extensions/num_extendsion.dart';
 import 'package:flutter_api/modules/account/presentation/components/user_avatar.dart';
@@ -6,13 +7,13 @@ import 'package:flutter_api/modules/account/presentation/components/user_avatar.
 class UserTitle extends StatelessWidget {
   final String userName;
   final String userEmail;
+  final String userGender;
 
-  const UserTitle({super.key, required this.userName, required this.userEmail});
+  const UserTitle({super.key, required this.userName, required this.userEmail, required this.userGender});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(left: 8, right: 8, top: 8),
       padding: EdgeInsets.only(left: 16, top: 20),
       width: double.infinity,
       height: 140,
@@ -32,30 +33,34 @@ class UserTitle extends StatelessWidget {
           SizedBox(
             child: Row(
               children: [
+                8.horizontalSpace,
                 UserAvatar(
-                  imageUrl:
-                      'https://static.vecteezy.com/system/resources/previews/000/439/863/original/vector-users-icon.jpg',
+                  isNetwork: false,
+                  imageUrl: userGender == 'male' ? AppImages.maleImg : AppImages.femaleImg
                 ),
                 18.horizontalSpace,
-                Container(
-                  alignment: Alignment.topLeft,
-                  width: 240,
-                  padding: EdgeInsets.only(top: 6),
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        userName,
-                        style: Styles.h3.smb.copyWith(color: Colors.white70),
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      Text(
-                        userEmail,
-                        style: Styles.large.regular.copyWith(
-                          color: Colors.white70,
+                      Padding(
+                        padding: EdgeInsets.only(right: 8),
+                        child: Text(
+                          userName,
+                          style: Styles.h3.smb.copyWith(color: Colors.white70),
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(right: 8),
+                        child: Text(
+                          userEmail,
+                          style: Styles.large.regular.copyWith(
+                            color: Colors.white70,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
                       ),
                     ],
                   ),

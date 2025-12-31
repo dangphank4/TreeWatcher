@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -17,7 +18,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
   final idCtrl = TextEditingController();
   final passCtrl = TextEditingController();
   final nameCtrl = TextEditingController();
-
+  final _deviceBloc = Modular.get<DeviceBloc>();
   bool showNameField = false;
   bool showQrScanner = false;
   String lastSensorId = "";
@@ -28,7 +29,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
       appBar: AppBar(
         title: const Text("Thêm thiết bị"),
         actions: [
-          // ✅ Nút toggle QR scanner
+          // Nút toggle QR scanner
           if (!showNameField)
             IconButton(
               icon: Icon(showQrScanner ? Icons.keyboard : Icons.qr_code_scanner),
@@ -43,39 +44,39 @@ class _AddDevicePageState extends State<AddDevicePage> {
       ),
       body: BlocConsumer<DeviceBloc, DeviceState>(
         listener: (context, state) {
-          if (state is DeviceCheckSuccess) {
+          if (state.sensorId != null && !showNameField) {
             setState(() {
               showNameField = true;
-              showQrScanner = false; // Tắt QR scanner khi thành công
-              lastSensorId = state.sensorId;
+              showQrScanner = false;
+              lastSensorId = state.sensorId!;
             });
           }
-
-          if (state is DeviceSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Đã thêm thiết bị: ${state.deviceName}")),
-            );
-            Modular.to.pop();
-          }
-
-          if (state is DeviceFailure) {
+          if (state.deviceName != null) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text(state.message),
+                content: Text("Đã thêm thiết bị: ${state.deviceName}"),
+              ),
+            );
+            NavigationHelper.goBack();
+          }
+
+          if (state.errorMessage != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.errorMessage!),
                 backgroundColor: Colors.red,
               ),
             );
           }
         },
         builder: (context, state) {
-          final isLoading = state is DeviceLoading;
+          final isLoading = state.isLoading;
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // ✅ QR Scanner hoặc Form nhập thủ công
                 if (showQrScanner && !showNameField)
                   _buildQrScanner()
                 else if (!showNameField)
@@ -85,7 +86,6 @@ class _AddDevicePageState extends State<AddDevicePage> {
 
                 const SizedBox(height: 20),
 
-                // ✅ Nút hành động
                 ElevatedButton(
                   onPressed: isLoading ? null : _handleButtonPress,
                   style: ElevatedButton.styleFrom(
@@ -113,7 +113,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
     );
   }
 
-  // ✅ QR Scanner Widget
+  //  QR Scanner Widget
   Widget _buildQrScanner() {
     return Container(
       height: 400,
@@ -131,7 +131,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
 
             final parts = raw.split("|");
 
-            // ✅ Kiểm tra định dạng QR: id|password
+            // Kiểm tra định dạng QR: id|password
             if (parts.length != 2) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
@@ -145,15 +145,15 @@ class _AddDevicePageState extends State<AddDevicePage> {
             final sensorId = parts[0].trim();
             final password = parts[1].trim();
 
-            // ✅ Tự động điền vào form
+            // Tự động điền vào form
             setState(() {
               idCtrl.text = sensorId;
               passCtrl.text = password;
               showQrScanner = false; // Tắt scanner
             });
 
-            // ✅ Tự động kiểm tra thiết bị
-            ModularWatchExtension(context).read<DeviceBloc>().add(
+            // Tự động kiểm tra thiết bị
+            _deviceBloc.add(
               DeviceCheckRequested(
                 sensorId: sensorId,
                 password: password,
@@ -165,7 +165,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
     );
   }
 
-  // ✅ Form nhập thủ công
+  // form nhập thủ công
   Widget _buildManualInputForm(bool isLoading) {
     return Column(
       children: [
@@ -198,7 +198,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
     );
   }
 
-  // ✅ Form nhập tên thiết bị (sau khi kiểm tra thành công)
+  // Form nhập tên thiết bị (sau khi kiểm tra thành công)
   Widget _buildNameInputForm(bool isLoading) {
     return Column(
       children: [
@@ -237,9 +237,8 @@ class _AddDevicePageState extends State<AddDevicePage> {
     );
   }
 
-  // ✅ Xử lý khi ấn nút
+  // Xử lý khi ấn nút
   void _handleButtonPress() {
-    final bloc = ModularWatchExtension(context).read<DeviceBloc>();
 
     if (!showNameField) {
       // Bước 1: Kiểm tra thiết bị
@@ -256,7 +255,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
         return;
       }
 
-      bloc.add(
+      _deviceBloc.add(
         DeviceCheckRequested(
           sensorId: sensorId,
           password: password,
@@ -276,7 +275,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
         return;
       }
 
-      bloc.add(
+      _deviceBloc.add(
         DeviceAddRequested(
           sensorId: lastSensorId,
           deviceName: deviceName,

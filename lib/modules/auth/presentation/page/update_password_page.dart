@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_api/core/components/confirm_dialog.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
+import 'package:flutter_api/core/constants/app_styles.dart';
 import 'package:flutter_api/core/extensions/localized_extendsion.dart';
 import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/modules/app/general/app_module_routes.dart';
@@ -32,30 +34,42 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
     super.dispose();
   }
 
-  void _submit() {
+  /// Hàm validate và check dữ liệu trước khi submit
+  bool _validateInputs() {
     final oldPass = _oldController.text.trim();
     final newPass = _newController.text.trim();
     final confirm = _confirmController.text.trim();
 
     if (oldPass.isEmpty || newPass.isEmpty || confirm.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.localization.pleaseEnterCompleteInformation)),
+        SnackBar(
+          content: Text(context.localization.pleaseEnterCompleteInformation),
+        ),
       );
-      return;
+      return false;
     }
 
     if (newPass != confirm) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Mật khẩu mới không khớp')),
+        SnackBar(content: Text(context.localization.pleaseEnterRightPassword)),
       );
-      return;
+      return false;
     }
 
-    // Gửi event tới Bloc
-    _authBloc.add(AuthUpdatePasswordRequested(
-      currentPassword: oldPass,
-      newPassword: newPass,
-    ));
+    return true;
+  }
+
+  /// Hàm submit chỉ gửi event
+  void _submit() {
+    final oldPass = _oldController.text.trim();
+    final newPass = _newController.text.trim();
+
+    _authBloc.add(
+      AuthUpdatePasswordRequested(
+        currentPassword: oldPass,
+        newPassword: newPass,
+      ),
+    );
   }
 
   @override
@@ -72,22 +86,29 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
         if (state is AuthUpdatePasswordSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('Đặt lại mật khẩu thành công!'),
+              content: Text(context.localization.resetPasswordSuccess),
               backgroundColor: Colors.green,
             ),
           );
-          NavigationHelper.reset('${AppRoutes.moduleApp}${AppModuleRoutes.main}'); // quay về màn chính
+          NavigationHelper.reset(
+            '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
+          ); // quay về màn chính
         } else if (state is AuthUpdatePasswordFailure) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.error),
-              backgroundColor: Colors.red,
-            ),
+            SnackBar(content: Text(state.error), backgroundColor: Colors.red),
           );
         }
       },
       child: Scaffold(
-       appBar: AppBar(title: Text(context.localization.resetPassword)),
+        appBar: AppBar(
+          title: Title(
+            color: Colors.grey,
+            child: Text(
+              context.localization.resetPassword,
+              style: Styles.h5.smb.copyWith(color: Colors.white),
+            ),
+          ),
+        ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
@@ -122,10 +143,44 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
                 const SizedBox(height: 24),
                 _isLoading
                     ? const CircularProgressIndicator()
-                    : ElevatedButton(
-                  onPressed: _submit,
-                  child: Text(context.localization.resetPassword),
-                ),
+                    : TextButton(
+                        onPressed: () async {
+                          if (_validateInputs()) {
+                            final confirm = await showConfirmDialog(
+                              context: context,
+                              title: context.localization.confirm,
+                              content:
+                                  '${context.localization.areYouReallyWantToChangePassword}?',
+                            );
+                            if (confirm == true) {
+                              _submit();
+                            }
+                          }
+                        },
+                        child: Container(
+                          alignment: Alignment.center,
+                          height: 34,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            gradient: LinearGradient(
+                              colors: [
+                                Colors.deepPurple.shade400,
+                                Colors.deepPurple.shade200,
+                              ],
+                              begin: Alignment.bottomLeft,
+                              end: Alignment.topRight,
+                            ),
+                            border: Border.all(width: 1.5, color: Colors.white),
+                          ),
+                          child: Text(
+                            context.localization.resetPassword,
+                            style: Styles.large.smb.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
               ],
             ),
           ),

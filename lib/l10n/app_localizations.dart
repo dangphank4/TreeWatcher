@@ -355,6 +355,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Area'**
   String get area;
+
+  /// No description provided for @updateUser.
+  ///
+  /// In en, this message translates to:
+  /// **'Update user'**
+  String get updateUser;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// No description provided for @areYouReallyWantToChangePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you really want to change password'**
+  String get areYouReallyWantToChangePassword;
+
+  /// No description provided for @areYouReallyWantToChangeAccountInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you really want to change account information'**
+  String get areYouReallyWantToChangeAccountInfo;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @accept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get accept;
+
+  /// No description provided for @updateAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Account'**
+  String get updateAccount;
+
+  /// No description provided for @fullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get fullName;
+
+  /// No description provided for @enterYourFullName.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your full name'**
+  String get enterYourFullName;
+
+  /// No description provided for @emailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your email address'**
+  String get emailHint;
+
+  /// No description provided for @phoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone Number'**
+  String get phoneNumber;
+
+  /// No description provided for @phoneHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your phone number'**
+  String get phoneHint;
+
+  /// No description provided for @gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// No description provided for @male.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get male;
+
+  /// No description provided for @female.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get female;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @accountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Account'**
+  String get accountTitle;
 }
 
 class _AppLocalizationsDelegate

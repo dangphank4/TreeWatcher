@@ -169,7 +169,7 @@ class _WeatherPageState extends State<WeatherPage> {
           padding: const EdgeInsets.only(left: 16, bottom: 8, top: 16),
           child: Text(
             context.localization.weather,
-            style: Styles.h1.regular.copyWith(color: Colors.black),
+            style: Styles.h1.smb.copyWith(color: Colors.black),
           ),
         ),
       ),

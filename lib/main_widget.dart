@@ -1,3 +1,4 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_api/modules/app/general/app_module_routes.dart';
@@ -9,15 +10,12 @@ import 'core/constants/app_key.dart';
 import 'core/constants/app_routes.dart';
 import 'core/constants/app_theme.dart';
 import 'core/helpers/generalHeper.dart';
-import 'core/helpers/navigation_helper.dart';
 import 'core/utils/globals.dart';
 import 'core/utils/utils.dart';
 import 'l10n/app_localizations.dart';
 import 'modules/app/presentation/blocs/app_bloc.dart';
 import 'modules/app/presentation/blocs/app_event.dart';
 import 'modules/app/presentation/blocs/app_state.dart';
-import 'modules/auth/general/auth_module_routes.dart';
-import 'modules/device/general/device_module_routes.dart';
 
 String appState = 'foreground';
 
@@ -36,18 +34,14 @@ class _MainWidgetState extends State<MainWidget> with WidgetsBindingObserver {
   void initState() {
     WidgetsBinding.instance.addObserver(this);
     super.initState();
+    Modular.setInitialRoute('${AppRoutes.moduleApp}${AppModuleRoutes.splash}');
     Modular.setNavigatorKey(AppKeys.navigatorKey);
 
-    if(Globals.globalAccessToken != null){
-      Modular.setInitialRoute(
-        '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
-      );
-    }
-    else {
-      Modular.setInitialRoute(
-      '${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}',
-    );
-    }
+    Modular.to.addListener(() {
+      Utils.debugLog('Current path: ${Modular.to.path}');
+      final currentPath = Modular.to.path;
+      FirebaseAnalytics.instance.logScreenView(screenName: currentPath);
+    });
   }
 
   @override

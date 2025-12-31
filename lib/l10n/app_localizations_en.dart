@@ -145,4 +145,57 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get area => 'Area';
+
+  @override
+  String get updateUser => 'Update user';
+
+  @override
+  String get confirm => 'Confirm';
+
+  @override
+  String get areYouReallyWantToChangePassword =>
+      'Are you really want to change password';
+
+  @override
+  String get areYouReallyWantToChangeAccountInfo =>
+      'Are you really want to change account information';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get accept => 'Accept';
+
+  @override
+  String get updateAccount => 'Update Account';
+
+  @override
+  String get fullName => 'Full Name';
+
+  @override
+  String get enterYourFullName => 'Enter your full name';
+
+  @override
+  String get emailHint => 'Your email address';
+
+  @override
+  String get phoneNumber => 'Phone Number';
+
+  @override
+  String get phoneHint => 'Enter your phone number';
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get male => 'Male';
+
+  @override
+  String get female => 'Female';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String get accountTitle => 'My Account';
 }
