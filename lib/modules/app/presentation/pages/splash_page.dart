@@ -28,7 +28,6 @@ class _SplashView extends StatelessWidget {
     return BlocListener<AccountBloc, AccountState>(
       listener: (context, state) {
 
-        /// 1️⃣ Chưa đăng nhập
         if (Globals.globalAccessToken == null) {
           NavigationHelper.replace(
             '${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}',
@@ -36,7 +35,6 @@ class _SplashView extends StatelessWidget {
           return;
         }
 
-        /// 2️⃣ Đã đăng nhập nhưng chưa đủ profile
         if (state is ProfileIncomplete) {
           NavigationHelper.replace(
             '${AppRoutes.moduleApp}${AppModuleRoutes.updateUser}',
@@ -44,7 +42,6 @@ class _SplashView extends StatelessWidget {
           return;
         }
 
-        /// 3️⃣ Profile đầy đủ
         if (state is ProfileCompleted) {
           NavigationHelper.replace(
             '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
