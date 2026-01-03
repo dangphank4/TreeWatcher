@@ -26,8 +26,8 @@ class UserTitle extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         // color: Colors.blue,
         gradient: LinearGradient(
-          colors: [Colors.white70, Colors.green],
-          stops: [0, 0.8],
+          colors: [Colors.white70, Colors.green.shade900],
+          stops: [0.2, 1],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),

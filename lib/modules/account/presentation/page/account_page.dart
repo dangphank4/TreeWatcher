@@ -122,6 +122,24 @@ class _AccountPageState extends State<AccountPage> {
                           width: double.infinity,
                           height: 1,
                           decoration: BoxDecoration(
+                              color: Colors.white24
+                          ),
+                        ),
+                        20.verticalSpace,
+                        UserUtility(
+                          icon: const Icon(
+                            Icons.question_answer_outlined,
+                          ),
+                          title: 'Trợ giúp & phản hồi',
+                          onPress: () {
+                          },
+                          color2: Colors.blueGrey,
+                        ),
+                        20.verticalSpace,
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          decoration: BoxDecoration(
                             color: Colors.white24
                           ),
                         ),
@@ -132,6 +150,8 @@ class _AccountPageState extends State<AccountPage> {
                           onPress: () {
                             authBloc.add(AuthLogoutRequested());
                           },
+                          color1: Colors.white,
+                          color3: Colors.red.shade200,
                         ),
                       ],
                     ),

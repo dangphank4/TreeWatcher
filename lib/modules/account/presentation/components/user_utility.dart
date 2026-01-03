@@ -7,12 +7,18 @@ class UserUtility extends StatelessWidget {
   final Icon icon;
   final String title;
   final VoidCallback? onPress;
+  final Color color1;
+  final Color color2;
+  final Color color3;
 
   UserUtility({
     super.key,
     required this.icon,
     required this.title,
     this.onPress,
+    this.color1 = Colors.white70,
+    this.color2 = Colors.white24,
+    this.color3 =  Colors.greenAccent,
   });
 
   @override
@@ -27,7 +33,7 @@ class UserUtility extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient: LinearGradient(
-            colors: [Colors.white70, Colors.white24, Colors.green],
+            colors: [color1, color2, color3],
             stops: [0, 0.15, 0.9],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
