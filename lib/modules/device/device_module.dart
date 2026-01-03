@@ -30,7 +30,7 @@ class DeviceModule extends Module {
       DeviceModuleRoutes.addDevice,
       child: (_) => BlocProvider.value(
         value: Modular.get<DeviceBloc>(),
-        child: const AddDevicePage(),
+        child: const AddDevicePage_1(),
       ),
     );
 
