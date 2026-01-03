@@ -23,7 +23,7 @@ class AccountRepository {
       fullName: data['fullName'] ?? '',
       email: firebaseUser.email ?? '',
       accessToken: data['accessToken'] ?? null,
-      gender: data['gender'] ?? ''
+      gender: data['gender'] ?? '',
     );
 
     return user;

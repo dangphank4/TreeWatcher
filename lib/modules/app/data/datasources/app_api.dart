@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_api/core/utils/utils.dart';
 
 class AppApi{
   final _auth = FirebaseAuth.instance;
@@ -9,7 +8,6 @@ class AppApi{
 
   User? get currentUser => _auth.currentUser;
 
-  /// Stream user document
   Stream<DocumentSnapshot<Map<String, dynamic>>> userStream() {
     final user = _auth.currentUser;
     if (user == null) {
@@ -22,7 +20,6 @@ class AppApi{
         .snapshots();
   }
 
-  /// Update user profile
   Future<void> updateUser({
     required String fullName,
     required String phone,

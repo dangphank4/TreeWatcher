@@ -457,6 +457,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'My Account'**
   String get accountTitle;
+
+  /// No description provided for @addNewDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Device'**
+  String get addNewDevice;
+
+  /// No description provided for @scanQr.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR Code'**
+  String get scanQr;
+
+  /// No description provided for @scanQrDesc.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the camera to the QR code on the device to identify it'**
+  String get scanQrDesc;
+
+  /// No description provided for @manualInput.
+  ///
+  /// In en, this message translates to:
+  /// **'Or enter manually'**
+  String get manualInput;
+
+  /// No description provided for @deviceId.
+  ///
+  /// In en, this message translates to:
+  /// **'Device ID'**
+  String get deviceId;
+
+  /// No description provided for @deviceName.
+  ///
+  /// In en, this message translates to:
+  /// **'Device nickname'**
+  String get deviceName;
+
+  /// No description provided for @connectDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect device'**
+  String get connectDevice;
+
+  /// No description provided for @scan.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan'**
+  String get scan;
 }
 
 class _AppLocalizationsDelegate

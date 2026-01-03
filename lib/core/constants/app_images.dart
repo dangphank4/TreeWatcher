@@ -5,4 +5,5 @@ class AppImages {
 
   static const String maleImg = '$imageDir/male_img.png';
   static const String femaleImg = '$imageDir/female_img.png';
+  static const String gradenImg = '$imageDir/graden_img.png';
 }

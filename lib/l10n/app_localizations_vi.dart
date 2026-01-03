@@ -198,4 +198,29 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get accountTitle => 'Tài khoản của tôi';
+
+  @override
+  String get addNewDevice => 'Thêm thiết bị mới';
+
+  @override
+  String get scanQr => 'Quét mã QR';
+
+  @override
+  String get scanQrDesc =>
+      'Di chuyển camera đến mã QR trên thiết bị để nhận diện';
+
+  @override
+  String get manualInput => 'Hoặc nhập thủ công';
+
+  @override
+  String get deviceId => 'ID thiết bị';
+
+  @override
+  String get deviceName => 'Đặt tên gợi nhớ';
+
+  @override
+  String get connectDevice => 'Kết nối thiết bị';
+
+  @override
+  String get scan => 'Quét';
 }

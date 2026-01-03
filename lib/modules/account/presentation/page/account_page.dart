@@ -8,6 +8,7 @@ import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/core/models/user_model.dart';
 import 'package:flutter_api/core/utils/utils.dart';
 import 'package:flutter_api/modules/account/data/repositories/account_repository.dart';
+import 'package:flutter_api/modules/account/general/account_module_route.dart';
 import 'package:flutter_api/modules/account/presentation/components/user_title.dart';
 import 'package:flutter_api/modules/account/presentation/components/user_utility.dart';
 import 'package:flutter_api/modules/app/general/app_module_routes.dart';
@@ -65,7 +66,7 @@ class _AccountPageState extends State<AccountPage> {
           padding: const EdgeInsets.only(left: 16, bottom: 8, top: 16),
           child: Text(
             context.localization.accountTitle,
-            style: Styles.h1.smb.copyWith(color: Colors.white60),
+            style: Styles.h1.smb.copyWith(color: Colors.white.withValues(alpha: 0.9)),
           ),
         ),
       ),
@@ -88,6 +89,8 @@ class _AccountPageState extends State<AccountPage> {
                           userGender: user.gender ?? '',
                         ),
                         20.verticalSpace,
+                        _buildLine(),
+                        20.verticalSpace,
                         UserUtility(
                           icon: const Icon(Icons.password),
                           title: context.localization.changePassword,
@@ -109,14 +112,34 @@ class _AccountPageState extends State<AccountPage> {
                             );
                           },
                         ),
-                        8.verticalSpace,
+                        20.verticalSpace,
+                        _buildLine(),
+                        20.verticalSpace,
+                        UserUtility(
+                          icon: const Icon(
+                            Icons.question_answer_outlined,
+                          ),
+                          title: 'Trợ giúp & phản hồi',
+                          onPress: () {
+                            NavigationHelper.navigate(
+                              '${AppRoutes.moduleAccount}${AccountModuleRoute.help}',
+                            );
+                          },
+                          color2: Colors.blueGrey,
+                        ),
+                        20.verticalSpace,
+                        _buildLine(),
+                        20.verticalSpace,
                         UserUtility(
                           icon: const Icon(Icons.logout),
                           title: context.localization.logOut,
                           onPress: () {
                             authBloc.add(AuthLogoutRequested());
                           },
+                          color1: Colors.white,
+                          color3: Colors.red.shade200,
                         ),
+                        40.verticalSpace,
                       ],
                     ),
                   ),
@@ -125,4 +148,14 @@ class _AccountPageState extends State<AccountPage> {
       ),
     );
   }
+}
+
+Widget _buildLine(){
+  return Container(
+    width: double.infinity,
+    height: 1,
+    decoration: BoxDecoration(
+        color: Colors.white24
+    ),
+  );
 }
