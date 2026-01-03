@@ -1,59 +1,39 @@
 import 'package:equatable/equatable.dart';
 
-final class DeviceState extends Equatable {
-  final bool isLoading;
-  final String? sensorId;
-  final String? deviceName;
-  final String? errorMessage;
-
-  const DeviceState._({
-    this.isLoading = false,
-    this.sensorId,
-    this.deviceName,
-    this.errorMessage,
-  });
-
-  const DeviceState.initial() : this._();
-
-  DeviceState setState({
-    bool? isLoading,
-    String? sensorId,
-    String? deviceName,
-    String? errorMessage,
-  }) {
-    return DeviceState._(
-      isLoading: isLoading ?? this.isLoading,
-      sensorId: sensorId ?? this.sensorId,
-      deviceName: deviceName ?? this.deviceName,
-      errorMessage: errorMessage,
-    );
-  }
-
-  DeviceState reset() {
-    return const DeviceState.initial();
-  }
-
-  factory DeviceState.fromJson(Map<String, dynamic> json) {
-    return DeviceState._(
-      isLoading: json['isLoading'] ?? false,
-      sensorId: json['sensorId'],
-      deviceName: json['deviceName'],
-      errorMessage: json['errorMessage'],
-    );
-  }
-
-  Map<String, dynamic> toJson() => {
-    'isLoading': isLoading,
-    'sensorId': sensorId,
-    'deviceName': deviceName,
-    'errorMessage': errorMessage,
-  };
+abstract class DeviceState extends Equatable {
+  const DeviceState();
 
   @override
-  List<Object?> get props => [
-    isLoading,
-    sensorId,
-    deviceName,
-    errorMessage,
-  ];
+  List<Object?> get props => [];
+}
+
+class DeviceInitial extends DeviceState {}
+
+class DeviceLoading extends DeviceState {}
+
+class DeviceLoaded extends DeviceState {
+  final List<Map<String, dynamic>> devices;
+
+  const DeviceLoaded(this.devices);
+
+  @override
+  List<Object?> get props => [devices];
+}
+
+class DeviceSuccess extends DeviceState {
+  final String message;
+
+  const DeviceSuccess(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class DeviceFailure extends DeviceState {
+  final String error;
+
+  const DeviceFailure(this.error);
+
+  @override
+  List<Object?> get props => [error];
 }

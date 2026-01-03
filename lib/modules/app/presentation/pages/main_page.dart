@@ -9,9 +9,11 @@ import 'package:flutter_api/modules/app/presentation/components/title_navigaion_
 import 'package:flutter_api/modules/app/presentation/components/title_navigaion_bar/navigation_bar_item.dart';
 import 'package:flutter_api/modules/auth/presentation/page/update_password_page.dart';
 import 'package:flutter_api/modules/weather/presentation/pages/weather_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:preload_page_view/preload_page_view.dart';
 
+import '../../../device/presentation/blocs/device_bloc.dart';
 import '../../../device/presentation/page/home_page.dart';
 import '../../general/app_module_routes.dart';
 
@@ -42,7 +44,13 @@ class _MainPageState extends State<MainPage> with RouteFocusMixin<MainPage> {
   }
 
   List<Widget> _pageViews() {
-    return [const HomePage(), WeatherPage(), AccountPage()];
+    return [BlocProvider.value(
+      value: Modular.get<DeviceBloc>(),
+      child: const HomePage(),
+    ),
+      WeatherPage(),
+      AccountPage()
+    ];
   }
 
 

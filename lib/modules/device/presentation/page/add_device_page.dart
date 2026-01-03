@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
+
+import '../../../account/data/repositories/account_repository.dart';
 import '../blocs/device_bloc.dart';
 import '../blocs/device_event.dart';
 import '../blocs/device_state.dart';
@@ -15,94 +16,188 @@ class AddDevicePage extends StatefulWidget {
 }
 
 class _AddDevicePageState extends State<AddDevicePage> {
+  String? userId;
+  bool loadingUser = true;
+
   final idCtrl = TextEditingController();
   final passCtrl = TextEditingController();
-  final nameCtrl = TextEditingController();
-  final _deviceBloc = Modular.get<DeviceBloc>();
-  bool showNameField = false;
+  final _formKey = GlobalKey<FormState>();
+
   bool showQrScanner = false;
-  String lastSensorId = "";
+  bool _waitingRename = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUser();
+  }
+
+  Future<void> _loadUser() async {
+    final accountRepo = Modular.get<AccountRepository>();
+    final user = await accountRepo.getCurrentUser();
+
+    setState(() {
+      userId = user?.userId;
+      loadingUser = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (loadingUser) {
+      return const Scaffold(
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    if (userId == null) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.person_off, size: 80, color: Colors.grey.shade400),
+              const SizedBox(height: 16),
+              const Text(
+                'Bạn chưa đăng nhập',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Thêm thiết bị"),
-        actions: [
-          // Nút toggle QR scanner
-          if (!showNameField)
-            IconButton(
-              icon: Icon(showQrScanner ? Icons.keyboard : Icons.qr_code_scanner),
-              onPressed: () {
-                setState(() {
-                  showQrScanner = !showQrScanner;
-                });
-              },
-              tooltip: showQrScanner ? "Nhập thủ công" : "Quét QR",
-            ),
-        ],
+        title: const Text("Thêm thiết bị mới"),
+        centerTitle: true,
+        elevation: 0,
       ),
       body: BlocConsumer<DeviceBloc, DeviceState>(
-        listener: (context, state) {
-          if (state.sensorId != null && !showNameField) {
-            setState(() {
-              showNameField = true;
-              showQrScanner = false;
-              lastSensorId = state.sensorId!;
-            });
-          }
-          if (state.deviceName != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text("Đã thêm thiết bị: ${state.deviceName}"),
-              ),
-            );
-            NavigationHelper.goBack();
+        listener: (context, state) async {
+          if (state is DeviceSuccess && !_waitingRename) {
+            _waitingRename = true;
+
+            final deviceId = idCtrl.text.trim();
+            final newName = await _showRenameDialog(context);
+
+            if (!mounted) return;
+
+            if (newName != null && newName.isNotEmpty) {
+              ModularWatchExtension(context).read<DeviceBloc>().add(
+                RenameDevice(
+                  userId: userId!,
+                  deviceId: deviceId,
+                  newName: newName,
+                ),
+              );
+            } else {
+              _waitingRename = false;
+              _showSuccessSnackBar('Thêm thiết bị thành công! 🎉');
+              Navigator.pop(context, true);
+            }
           }
 
-          if (state.errorMessage != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(state.errorMessage!),
-                backgroundColor: Colors.red,
-              ),
-            );
+          if (state is DeviceLoaded && _waitingRename) {
+            _waitingRename = false;
+            _showSuccessSnackBar('Thêm thiết bị thành công! 🎉');
+            Navigator.pop(context, true);
+          }
+
+          if (state is DeviceFailure) {
+            _waitingRename = false;
+            _showErrorSnackBar(state.error);
           }
         },
         builder: (context, state) {
-          final isLoading = state.isLoading;
+          final loading = state is DeviceLoading;
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                if (showQrScanner && !showNameField)
-                  _buildQrScanner()
-                else if (!showNameField)
-                  _buildManualInputForm(isLoading)
-                else
-                  _buildNameInputForm(isLoading),
-
-                const SizedBox(height: 20),
-
-                ElevatedButton(
-                  onPressed: isLoading ? null : _handleButtonPress,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                  ),
-                  child: isLoading
-                      ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
+                // ===== HEADER =====
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Theme.of(context).primaryColor,
+                        Theme.of(context)
+                            .primaryColor
+                            .withValues(alpha: 0.7),
+                      ],
                     ),
-                  )
-                      : Text(
-                    showNameField ? "Lưu thiết bị" : "Kiểm tra thiết bị",
-                    style: const TextStyle(fontSize: 16),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.sensors,
+                          size: 48,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Kết nối thiết bị IoT',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        showQrScanner
+                            ? 'Quét mã QR trên thiết bị'
+                            : 'Nhập thông tin thiết bị để kết nối',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.white.withValues(alpha: 0.9),
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+
+                // ===== CONTENT =====
+                Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      OutlinedButton.icon(
+                        onPressed: loading
+                            ? null
+                            : () {
+                          setState(
+                                  () => showQrScanner = !showQrScanner);
+                        },
+                        icon: Icon(showQrScanner
+                            ? Icons.keyboard
+                            : Icons.qr_code_scanner),
+                        label: Text(showQrScanner
+                            ? 'Nhập thủ công'
+                            : 'Quét mã QR'),
+                      ),
+                      const SizedBox(height: 24),
+                      AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 300),
+                        child: showQrScanner
+                            ? _buildQrScanner()
+                            : _buildForm(loading, userId!),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -113,181 +208,146 @@ class _AddDevicePageState extends State<AddDevicePage> {
     );
   }
 
-  //  QR Scanner Widget
-  Widget _buildQrScanner() {
-    return Container(
-      height: 400,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(12),
+  Widget _buildForm(bool loading, String userId) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        key: const ValueKey('form'),
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildInputCard(
+            title: 'Mã thiết bị',
+            icon: Icons.sensors,
+            child: TextFormField(
+              controller: idCtrl,
+              enabled: !loading,
+              decoration: _inputDecoration('Ví dụ: device_001', Icons.tag),
+              validator: (v) =>
+              v == null || v.trim().isEmpty ? 'Nhập mã thiết bị' : null,
+            ),
+          ),
+          const SizedBox(height: 16),
+          _buildInputCard(
+            title: 'Mật khẩu',
+            icon: Icons.lock,
+            child: TextFormField(
+              controller: passCtrl,
+              enabled: !loading,
+              obscureText: true,
+              decoration:
+              _inputDecoration('Nhập mật khẩu thiết bị', Icons.key),
+              validator: (v) =>
+              v == null || v.trim().isEmpty ? 'Nhập mật khẩu' : null,
+            ),
+          ),
+          const SizedBox(height: 24),
+          ElevatedButton(
+            onPressed: loading ? null : () => _handleAddDevice(userId),
+            child: loading
+                ? const CircularProgressIndicator(color: Colors.white)
+                : const Text('Thêm thiết bị'),
+          ),
+        ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(12),
+    );
+  }
+
+  Widget _buildQrScanner() {
+    return Card(
+      child: SizedBox(
+        height: 350,
         child: MobileScanner(
           onDetect: (capture) {
-            final barcode = capture.barcodes.first;
-            final raw = barcode.rawValue;
+            final raw = capture.barcodes.first.rawValue;
             if (raw == null) return;
 
-            final parts = raw.split("|");
-
-            // Kiểm tra định dạng QR: id|password
-            if (parts.length != 2) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("QR không đúng định dạng: id|password"),
-                  backgroundColor: Colors.orange,
-                ),
-              );
-              return;
-            }
-
-            final sensorId = parts[0].trim();
-            final password = parts[1].trim();
-
-            // Tự động điền vào form
-            setState(() {
-              idCtrl.text = sensorId;
-              passCtrl.text = password;
-              showQrScanner = false; // Tắt scanner
-            });
-
-            // Tự động kiểm tra thiết bị
-            _deviceBloc.add(
-              DeviceCheckRequested(
-                sensorId: sensorId,
-                password: password,
-              ),
-            );
+            idCtrl.text = raw.trim();
+            setState(() => showQrScanner = false);
           },
         ),
       ),
     );
   }
 
-  // form nhập thủ công
-  Widget _buildManualInputForm(bool isLoading) {
-    return Column(
-      children: [
-        const Text(
-          "Nhập thông tin thiết bị",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 20),
-        TextField(
-          controller: idCtrl,
-          decoration: const InputDecoration(
-            labelText: "Sensor ID",
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.sensors),
-          ),
-          enabled: !isLoading,
-        ),
-        const SizedBox(height: 16),
-        TextField(
-          controller: passCtrl,
-          decoration: const InputDecoration(
-            labelText: "Mật khẩu thiết bị",
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.lock),
-          ),
-          obscureText: true,
-          enabled: !isLoading,
-        ),
-      ],
+  void _handleAddDevice(String userId) {
+    if (!_formKey.currentState!.validate()) return;
+
+    ModularWatchExtension(context).read<DeviceBloc>().add(
+      RegisterDevice(
+        userId: userId,
+        deviceId: idCtrl.text.trim(),
+        deviceName: 'Thiết bị ${idCtrl.text.trim()}',
+        password: passCtrl.text.trim(),
+      ),
     );
   }
 
-  // Form nhập tên thiết bị (sau khi kiểm tra thành công)
-  Widget _buildNameInputForm(bool isLoading) {
-    return Column(
-      children: [
-        const Icon(
-          Icons.check_circle,
-          color: Colors.green,
-          size: 64,
-        ),
-        const SizedBox(height: 16),
-        const Text(
-          "Thiết bị hợp lệ!",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.green,
+  Future<String?> _showRenameDialog(BuildContext context) {
+    final ctrl = TextEditingController();
+    return showDialog<String>(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Đặt tên thiết bị'),
+        content: TextField(controller: ctrl),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Bỏ qua'),
           ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          "ID: $lastSensorId",
-          style: const TextStyle(color: Colors.grey),
-        ),
-        const SizedBox(height: 24),
-        TextField(
-          controller: nameCtrl,
-          decoration: const InputDecoration(
-            labelText: "Đặt tên cho thiết bị",
-            border: OutlineInputBorder(),
-            prefixIcon: Icon(Icons.edit),
-            hintText: "Ví dụ: Cảm biến phòng khách",
+          ElevatedButton(
+            onPressed: () =>
+                Navigator.pop(context, ctrl.text.trim().isEmpty ? null : ctrl.text.trim()),
+            child: const Text('Lưu'),
           ),
-          enabled: !isLoading,
-          autofocus: true,
-        ),
-      ],
+        ],
+      ),
     );
   }
 
-  // Xử lý khi ấn nút
-  void _handleButtonPress() {
-
-    if (!showNameField) {
-      // Bước 1: Kiểm tra thiết bị
-      final sensorId = idCtrl.text.trim();
-      final password = passCtrl.text.trim();
-
-      if (sensorId.isEmpty || password.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Vui lòng nhập đầy đủ thông tin"),
-            backgroundColor: Colors.orange,
-          ),
-        );
-        return;
-      }
-
-      _deviceBloc.add(
-        DeviceCheckRequested(
-          sensorId: sensorId,
-          password: password,
+  Widget _buildInputCard({
+    required String title,
+    required IconData icon,
+    required Widget child,
+  }) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(children: [Icon(icon), const SizedBox(width: 8), Text(title)]),
+            const SizedBox(height: 12),
+            child,
+          ],
         ),
-      );
-    } else {
-      final deviceName = nameCtrl.text.trim();
+      ),
+    );
+  }
 
-      if (deviceName.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text("Vui lòng nhập tên thiết bị"),
-            backgroundColor: Colors.orange,
-          ),
-        );
-        return;
-      }
+  InputDecoration _inputDecoration(String hint, IconData icon) {
+    return InputDecoration(
+      hintText: hint,
+      prefixIcon: Icon(icon),
+      filled: true,
+      fillColor: Colors.grey.shade50,
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+    );
+  }
 
-      _deviceBloc.add(
-        DeviceAddRequested(
-          sensorId: lastSensorId,
-          deviceName: deviceName,
-        ),
-      );
-    }
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  void _showSuccessSnackBar(String message) {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
   void dispose() {
     idCtrl.dispose();
     passCtrl.dispose();
-    nameCtrl.dispose();
     super.dispose();
   }
 }

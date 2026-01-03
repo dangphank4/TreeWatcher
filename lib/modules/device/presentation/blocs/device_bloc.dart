@@ -1,83 +1,93 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../core/utils/globals.dart';
+
 import '../../data/repositories/device_repository.dart';
 import 'device_event.dart';
 import 'device_state.dart';
 
 class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
-  final DeviceRepository repo;
+  final DeviceRepository _repo;
 
-  DeviceBloc({required this.repo}) : super(const DeviceState.initial()) {
-    on<DeviceCheckRequested>(_onCheckDevice);
-    on<DeviceAddRequested>(_onAddDevice);
+  DeviceBloc(this._repo) : super(DeviceInitial()) {
+    on<LoadDevices>(_onLoadDevices);
+    on<RegisterDevice>(_onRegisterDevice);
+    on<RenameDevice>(_onRenameDevice);
+    on<DeleteDevice>(_onDeleteDevice);
   }
 
-  Future<void> _onCheckDevice(
-      DeviceCheckRequested event,
+  Future<void> _onLoadDevices(
+      LoadDevices event,
       Emitter<DeviceState> emit,
       ) async {
-    // Loading
-    emit(state.setState(
-      isLoading: true,
-      errorMessage: null,
-    ));
+    emit(DeviceLoading());
 
-    final result = await repo.checkDevice(
-      sensorId: event.sensorId,
-      password: event.password,
-    );
+    final result = await _repo.getDevices(event.userId);
 
-    switch (result) {
-      case "OK":
-        emit(state.setState(
-          isLoading: false,
-          sensorId: event.sensorId,
-          errorMessage: null,
-        ));
-        break;
-
-      case "ERROR:NOT_FOUND":
-        emit(state.setState(
-          isLoading: false,
-          errorMessage: "Thiết bị không tồn tại",
-        ));
-        break;
-
-      case "ERROR:WRONG_PASSWORD":
-        emit(state.setState(
-          isLoading: false,
-          errorMessage: "Sai mật khẩu thiết bị",
-        ));
-        break;
-
-      default:
-        emit(state.setState(
-          isLoading: false,
-          errorMessage: "Lỗi không xác định",
-        ));
-        break;
+    if (result.isSuccess) {
+      emit(DeviceLoaded(result.data!));
+    } else {
+      emit(DeviceFailure(result.error!));
     }
   }
 
-  Future<void> _onAddDevice(
-      DeviceAddRequested event,
+  Future<void> _onRegisterDevice(
+      RegisterDevice event,
       Emitter<DeviceState> emit,
       ) async {
-    emit(state.setState(
-      isLoading: true,
-      errorMessage: null,
-    ));
+    emit(DeviceLoading());
 
-    await repo.addDevice(
-      sensorId: event.sensorId,
-      name: event.deviceName,
-      userId: Globals.globalUserUUID!,
+    final result = await _repo.registerDevice(
+      userId: event.userId,
+      deviceId: event.deviceId,
+      deviceName: event.deviceName,
+      password: event.password,
     );
 
-    emit(state.setState(
-      isLoading: false,
-      deviceName: event.deviceName,
-      errorMessage: null,
-    ));
+    if (result.isSuccess) {
+      emit(const DeviceSuccess('Thêm thiết bị thành công'));
+      // reload list
+      add(LoadDevices(event.userId));
+    } else {
+      emit(DeviceFailure(result.error!));
+      print(result.error);
+    }
+  }
+
+  Future<void> _onRenameDevice(
+      RenameDevice event,
+      Emitter<DeviceState> emit,
+      ) async {
+    emit(DeviceLoading());
+
+    final result = await _repo.renameDevice(
+      userId: event.userId,
+      deviceId: event.deviceId,
+      newName: event.newName,
+    );
+
+    if (result.isSuccess) {
+      emit(const DeviceSuccess('Đổi tên thiết bị thành công'));
+      add(LoadDevices(event.userId));
+    } else {
+      emit(DeviceFailure(result.error!));
+    }
+  }
+
+  Future<void> _onDeleteDevice(
+      DeleteDevice event,
+      Emitter<DeviceState> emit,
+      ) async {
+    emit(DeviceLoading());
+
+    final result = await _repo.deleteDevice(
+      userId: event.userId,
+      deviceId: event.deviceId,
+    );
+
+    if (result.isSuccess) {
+      emit(const DeviceSuccess('Xoá thiết bị thành công'));
+      add(LoadDevices(event.userId));
+    } else {
+      emit(DeviceFailure(result.error!));
+    }
   }
 }
