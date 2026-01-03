@@ -1,4 +1,5 @@
 // device_module.dart
+import 'package:flutter_api/modules/device/presentation/page/home_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'data/datasource/device_api.dart';
@@ -18,7 +19,7 @@ class DeviceModule extends Module {
     );
 
     i.addSingleton<DeviceBloc>(
-          () => DeviceBloc(repo: i.get<DeviceRepository>()),
+          () => DeviceBloc(i.get<DeviceRepository>()),
     );
   }
 

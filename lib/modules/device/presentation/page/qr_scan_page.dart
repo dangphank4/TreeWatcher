@@ -13,34 +13,13 @@ class QrScanPage extends StatelessWidget {
       appBar: AppBar(title: const Text("Quét QR thiết bị")),
       body: MobileScanner(
         onDetect: (capture) {
-          final barcode = capture.barcodes.first;
-          final raw = barcode.rawValue;
+          final raw = capture.barcodes.first.rawValue;
           if (raw == null) return;
 
-          final parts = raw.split("|");
-
-          /// Kiểm tra QR phải có đúng 2 phần: id | pass
-          if (parts.length != 2) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("QR không đúng định dạng: id|pass")),
-            );
-            return;
-          }
-
-          final sensorId = parts[0].trim();
-          final password = parts[1].trim();
-
-          /// Step 1: Gửi CHECK DEVICE → DeviceBloc
-          context.read<DeviceBloc>().add(
-            DeviceCheckRequested(
-              sensorId: sensorId,
-              password: password,
-            ),
-          );
-
-          Navigator.pop(context);
+          Navigator.pop(context, raw.trim());
         },
       ),
     );
   }
 }
+
