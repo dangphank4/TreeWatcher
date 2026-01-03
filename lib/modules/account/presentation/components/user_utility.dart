@@ -27,7 +27,7 @@ class UserUtility extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           gradient: LinearGradient(
-            colors: [Colors.white70, Colors.white24, Colors.white70],
+            colors: [Colors.white70, Colors.white24, Colors.green],
             stops: [0, 0.15, 0.9],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

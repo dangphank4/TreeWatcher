@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_api/core/constants/app_images.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
 import 'package:flutter_api/core/constants/app_styles.dart';
 import 'package:flutter_api/core/extensions/localized_extendsion.dart';
@@ -59,154 +60,209 @@ class _RegisterPageState extends State<RegisterPage> {
         backgroundColor: Colors.black,
         body: Padding(
           padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                context.localization.register,
-                style: Styles.h1.smb.copyWith(
-                    color: Colors.white
-                ),
-              ),
-              SizedBox(height: 20),
-              // Email
-              TextField(
-                controller: _emailController,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: context.localization.email,
-
-                  labelStyle: const TextStyle(color: Colors.white70),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Colors.white24),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Mật khẩu
-              TextField(
-                controller: _passwordController,
-                obscureText: _obscurePassword,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: context.localization.password,
-                  labelStyle: const TextStyle(color: Colors.white70),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Colors.white24),
-                  ),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _obscurePassword = !_obscurePassword;
-                      });
-                    },
-                    icon: Icon(
-                      _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                      color: Colors.white70,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                40.verticalSpace,
+                Stack(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      height: 210,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.asset(
+                          AppImages.gradenImg,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-              TextField(
-                controller: _passwordConfirmController,
-                obscureText: _obscurerConfirmPassword,
-                style: const TextStyle(color: Colors.white),
-                decoration: InputDecoration(
-                  labelText: context.localization.confirmPassword,
-                  labelStyle: const TextStyle(color: Colors.white70),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: Colors.white24),
-                  ),
-                  suffixIcon: IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _obscurerConfirmPassword = !_obscurerConfirmPassword;
-                      });
-                    },
-                    icon: Icon(
-                      _obscurerConfirmPassword ? Icons.visibility_off : Icons.visibility,
-                      color: Colors.white70,
+                    Container(
+                      width: double.infinity,
+                      height: 210,
+                      padding: EdgeInsets.only(left: 8, bottom: 10),
+                      alignment: Alignment.bottomLeft,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomLeft,
+                          end: Alignment.topRight,
+                          colors: [
+                            Colors.black26,
+                            Colors.transparent,
+                          ],
+                          stops: [0.3 , 1.0],
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Wellcom back',
+                            style: Styles.h2.smb.copyWith(
+                                color: Colors.white
+                            ),),
+                          Text('This green world is waiting for you',
+                            style: Styles.large.regular.copyWith(
+                                color: Colors.white.withValues(alpha: 0.9)
+                            ),)
+                        ],
+                      ),
                     ),
+            
+                  ],
+                ),
+                20.verticalSpace,
+                Text(
+                  context.localization.register,
+                  style: Styles.h1.smb.copyWith(
+                      color: Colors.white
                   ),
                 ),
-              ),
-              // BUTTON LOGIN
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    shape: RoundedRectangleBorder(
+                SizedBox(height: 20),
+                // Email
+                TextField(
+                  controller: _emailController,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: context.localization.email,
+            
+                    labelStyle: const TextStyle(color: Colors.white70),
+                    border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Colors.white24),
+                    ),
                   ),
-                  onPressed: () async {
-                    final email = _emailController.text;
-                    if(_passwordConfirmController.text != _passwordController.text){
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text(context.localization.pleaseEnterRightPassword)),
-                      );
-                      return;
-                    }
-                    final password =  _passwordController.text;
-
-                    if (email.isEmpty || password == '') {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                            content: Text(context.localization.pleaseEnterCompleteInformation)),
-                      );
-                      return;
-                    }
-
-                    // Giả lập loading
-                    await Future.delayed(const Duration(milliseconds: 500));
-
-                    // NavigationHelper.replace(
-                    //   '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
-                    // );
-                    Utils.debugLog('Regisiter successed');
-                    _authBloc.add(
-                      AuthRegisterRequested(
-                        email: email,
-                        password: password,
+                ),
+                const SizedBox(height: 16),
+            
+                // Mật khẩu
+                TextField(
+                  controller: _passwordController,
+                  obscureText: _obscurePassword,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: context.localization.password,
+                    labelStyle: const TextStyle(color: Colors.white70),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Colors.white24),
+                    ),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                      icon: Icon(
+                        _obscurePassword ? Icons.visibility_off : Icons.visibility,
+                        color: Colors.white70,
                       ),
-                    );
-
-                  },
-                  child: Text(
-                    context.localization.register,
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
-              ),
-              12.verticalSpace,
-              SizedBox(
-                width: double.infinity,
-                child: TextButton(
-                    onPressed: (){
-                      NavigationHelper.replace('${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}');
-                    },
-                    child: Text(context.localization.youHaveAnAccount)
+                const SizedBox(height: 24),
+                TextField(
+                  controller: _passwordConfirmController,
+                  obscureText: _obscurerConfirmPassword,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: context.localization.confirmPassword,
+                    labelStyle: const TextStyle(color: Colors.white70),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: const BorderSide(color: Colors.white24),
+                    ),
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          _obscurerConfirmPassword = !_obscurerConfirmPassword;
+                        });
+                      },
+                      icon: Icon(
+                        _obscurerConfirmPassword ? Icons.visibility_off : Icons.visibility,
+                        color: Colors.white70,
+                      ),
+                    ),
+                  ),
                 ),
-              )
-            ],
+                // BUTTON LOGIN
+                const SizedBox(height: 24),
+                SizedBox(
+                  width: double.infinity,
+                  height: 48,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    onPressed: () async {
+                      final email = _emailController.text;
+                      if(_passwordConfirmController.text != _passwordController.text){
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(context.localization.pleaseEnterRightPassword)),
+                        );
+                        return;
+                      }
+                      final password =  _passwordController.text;
+            
+                      if (email.isEmpty || password == '') {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content: Text(context.localization.pleaseEnterCompleteInformation)),
+                        );
+                        return;
+                      }
+            
+                      // Giả lập loading
+                      await Future.delayed(const Duration(milliseconds: 500));
+            
+                      // NavigationHelper.replace(
+                      //   '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
+                      // );
+                      Utils.debugLog('Regisiter successed');
+                      _authBloc.add(
+                        AuthRegisterRequested(
+                          email: email,
+                          password: password,
+                        ),
+                      );
+            
+                    },
+                    child: Text(
+                      context.localization.register,
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                12.verticalSpace,
+                SizedBox(
+                  width: double.infinity,
+                  child: TextButton(
+                      onPressed: (){
+                        NavigationHelper.replace('${AppRoutes.moduleAuth}${AuthModuleRoutes.signIn}');
+                      },
+                      child: Text(context.localization.youHaveAnAccount)
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

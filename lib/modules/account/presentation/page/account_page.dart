@@ -65,7 +65,7 @@ class _AccountPageState extends State<AccountPage> {
           padding: const EdgeInsets.only(left: 16, bottom: 8, top: 16),
           child: Text(
             context.localization.accountTitle,
-            style: Styles.h1.smb.copyWith(color: Colors.white60),
+            style: Styles.h1.smb.copyWith(color: Colors.white.withValues(alpha: 0.9)),
           ),
         ),
       ),
@@ -86,6 +86,14 @@ class _AccountPageState extends State<AccountPage> {
                           userName: user.fullName ?? '',
                           userEmail: user.email ?? '',
                           userGender: user.gender ?? '',
+                        ),
+                        20.verticalSpace,
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          decoration: BoxDecoration(
+                              color: Colors.white24
+                          ),
                         ),
                         20.verticalSpace,
                         UserUtility(
@@ -109,7 +117,15 @@ class _AccountPageState extends State<AccountPage> {
                             );
                           },
                         ),
-                        8.verticalSpace,
+                        20.verticalSpace,
+                        Container(
+                          width: double.infinity,
+                          height: 1,
+                          decoration: BoxDecoration(
+                            color: Colors.white24
+                          ),
+                        ),
+                        20.verticalSpace,
                         UserUtility(
                           icon: const Icon(Icons.logout),
                           title: context.localization.logOut,
