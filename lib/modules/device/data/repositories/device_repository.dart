@@ -136,4 +136,32 @@ class DeviceRepository {
         return 'Lỗi Firebase (${e.code})';
     }
   }
+
+  Future<Result<void>> changeDevicePassword({
+    required String deviceId,
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    try {
+      await TimeoutHelper.run(
+        api.changeDevicePassword(
+          deviceId: deviceId,
+          oldPassword: oldPassword,
+          newPassword: newPassword,
+        ),
+        duration: const Duration(seconds: defaut_timeout),
+        timeoutMessage: 'Kết nối quá lâu, vui lòng thử lại',
+      );
+
+      return Result.success();
+    } on DeviceException catch (e) {
+      return Result.failure(e.message);
+    } on TimeoutException catch (e) {
+      return Result.failure(e.message ?? 'Timeout');
+    } on FirebaseException catch (e) {
+      return Result.failure(_mapFirebaseError(e));
+    } catch (_) {
+      return Result.failure('Đổi mật khẩu thiết bị thất bại');
+    }
+  }
 }

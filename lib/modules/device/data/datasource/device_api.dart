@@ -118,4 +118,28 @@ class DeviceApi {
       name: deviceName,
     );
   }
+
+  // Đổi mật khẩu thiết bị
+  Future<void> changeDevicePassword({
+    required String deviceId,
+    required String oldPassword,
+    required String newPassword,
+  }) async {
+    final ref = _realtime.ref('sensors/$deviceId');
+    final snap = await ref.get();
+
+    if (!snap.exists) {
+      throw DeviceException('Thiết bị không tồn tại');
+    }
+
+    final data = Map<String, dynamic>.from(snap.value as Map);
+
+    if (data['password'] != oldPassword) {
+      throw DeviceException('Mật khẩu cũ không đúng');
+    }
+
+    await ref.update({
+      'password': newPassword,
+    });
+  }
 }

@@ -12,6 +12,7 @@ class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
     on<RegisterDevice>(_onRegisterDevice);
     on<RenameDevice>(_onRenameDevice);
     on<DeleteDevice>(_onDeleteDevice);
+    on<ChangeDevicePassword>(_onChangeDevicePassword);
   }
 
   Future<void> _onLoadDevices(
@@ -86,6 +87,25 @@ class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
     if (result.isSuccess) {
       emit(const DeviceSuccess('Xoá thiết bị thành công'));
       add(LoadDevices(event.userId));
+    } else {
+      emit(DeviceFailure(result.error!));
+    }
+  }
+
+  Future<void> _onChangeDevicePassword(
+      ChangeDevicePassword event,
+      Emitter<DeviceState> emit,
+      ) async {
+    emit(DeviceLoading());
+
+    final result = await _repo.changeDevicePassword(
+      deviceId: event.deviceId,
+      oldPassword: event.oldPassword,
+      newPassword: event.newPassword,
+    );
+
+    if (result.isSuccess) {
+      emit(const DeviceSuccess('Đổi mật khẩu thiết bị thành công'));
     } else {
       emit(DeviceFailure(result.error!));
     }
