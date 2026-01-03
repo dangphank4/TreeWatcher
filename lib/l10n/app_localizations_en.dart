@@ -198,4 +198,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get accountTitle => 'My Account';
+
+  @override
+  String get addNewDevice => 'Add New Device';
+
+  @override
+  String get scanQr => 'Scan QR Code';
+
+  @override
+  String get scanQrDesc =>
+      'Move the camera to the QR code on the device to identify it';
+
+  @override
+  String get manualInput => 'Or enter manually';
+
+  @override
+  String get deviceId => 'Device ID';
+
+  @override
+  String get deviceName => 'Device nickname';
+
+  @override
+  String get connectDevice => 'Connect device';
+
+  @override
+  String get scan => 'Scan';
 }

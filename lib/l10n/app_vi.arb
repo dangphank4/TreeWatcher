@@ -60,5 +60,14 @@
   "male": "Nam",
   "female": "Nữ",
   "save": "Lưu",
-  "accountTitle": "Tài khoản của tôi"
+  "accountTitle": "Tài khoản của tôi",
+  "addNewDevice": "Thêm thiết bị mới",
+  "scanQr": "Quét mã QR",
+  "scanQrDesc": "Di chuyển camera đến mã QR trên thiết bị để nhận diện",
+  "manualInput": "Hoặc nhập thủ công",
+  "deviceId": "ID thiết bị",
+  "password": "Mật khẩu",
+  "deviceName": "Đặt tên gợi nhớ",
+  "connectDevice": "Kết nối thiết bị",
+  "scan": "Quét"
 }

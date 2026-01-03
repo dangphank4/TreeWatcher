@@ -8,14 +8,14 @@ import '../blocs/device_bloc.dart';
 import '../blocs/device_event.dart';
 import '../blocs/device_state.dart';
 
-class AddDevicePage extends StatefulWidget {
-  const AddDevicePage({super.key});
+class AddDevicePage_1 extends StatefulWidget {
+  const AddDevicePage_1({super.key});
 
   @override
-  State<AddDevicePage> createState() => _AddDevicePageState();
+  State<AddDevicePage_1> createState() => _AddDevicePageState();
 }
 
-class _AddDevicePageState extends State<AddDevicePage> {
+class _AddDevicePageState extends State<AddDevicePage_1> {
   String? userId;
   bool loadingUser = true;
 

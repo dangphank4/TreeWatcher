@@ -60,5 +60,14 @@
   "male": "Male",
   "female": "Female",
   "save": "Save",
-  "accountTitle": "My Account"
+  "accountTitle": "My Account",
+  "addNewDevice": "Add New Device",
+  "scanQr": "Scan QR Code",
+  "scanQrDesc": "Move the camera to the QR code on the device to identify it",
+  "manualInput": "Or enter manually",
+  "deviceId": "Device ID",
+  "password": "Password",
+  "deviceName": "Device nickname",
+  "connectDevice": "Connect device",
+  "scan": "Scan"
 }

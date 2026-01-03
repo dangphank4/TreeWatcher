@@ -8,7 +8,10 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'core/constants/app_evironment.dart';
+import 'core/constants/app_store.dart';
 import 'core/helpers/generalHeper.dart';
+import 'core/utils/globals.dart';
+import 'core/utils/utils.dart';
 import 'firebase_options.dart';
 import 'modules/device/presentation/page/add_device_page.dart';
 
@@ -19,6 +22,16 @@ Future<void> main() async {
 
   // SharedPreferences
   final sharedPreferences = await SharedPreferences.getInstance();
+
+  // LOAD LẠI SESSION
+  Globals.globalAccessToken =
+      sharedPreferences.getString(AppStores.kAccessToken);
+  Globals.globalUserUUID =
+      sharedPreferences.getString(AppStores.kUserId);
+  Globals.globalUsername =
+      sharedPreferences.getString(AppStores.kUsername);
+
+  Utils.debugLog('USER ID AFTER RESTART = ${Globals.globalUserUUID}');
 
   // HydratedBloc
   final dir = await getApplicationDocumentsDirectory();
