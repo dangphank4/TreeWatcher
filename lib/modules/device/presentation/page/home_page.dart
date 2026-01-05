@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_api/core/constants/app_dimensions.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
 import 'package:flutter_api/core/constants/app_styles.dart';
+import 'package:flutter_api/core/extensions/localized_extendsion.dart';
 import 'package:flutter_api/core/extensions/num_extendsion.dart';
 import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/modules/account/data/repositories/account_repository.dart';
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> {
         title: Padding(
           padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8),
           child: Text(
-            'Danh sách thiết bị',
+            context.localization.deviceListTitle,
             style: Styles.h1.smb.copyWith(
               color: Colors.white.withValues(alpha: 0.9),
             ),
@@ -123,13 +124,12 @@ class _HomePageState extends State<HomePage> {
             children: [
               20.verticalSpace,
               Text(
-                'Good morning $_userName',
+                '${context.localization.goodMorning} $_userName',
                 style: Styles.large.smb.copyWith(color: Colors.white),
               ),
               const SizedBox(height: 8),
               Text(
-                'Chào mừng bạn quay trở lại!\n'
-                'Tại đây bạn có thể quản lý và theo dõi thiết bị.',
+                  context.localization.welcomeBackMessage,
                 style: Styles.medium.regular.copyWith(color: Colors.white),
               ),
             ],
@@ -230,7 +230,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       6.verticalSpace,
                       Text(
-                        'ID: $deviceId',
+                        context.localization.deviceIdLabel(deviceId),
                         style: Styles.small.regular.copyWith(
                           color: Colors.white.withValues(alpha: 0.85),
                         ),

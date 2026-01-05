@@ -26,7 +26,7 @@ class _DetailDevicePageState extends State<DetailDevicePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green.withValues(alpha: 0.05),
+      backgroundColor: Color(0xFF000D00),
       appBar: AppBar(
         title: const Text('Chi tiết thiết bị'),
         centerTitle: true,

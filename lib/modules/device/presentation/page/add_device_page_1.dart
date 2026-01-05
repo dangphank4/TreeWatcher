@@ -77,7 +77,7 @@ class _AddDevicePageState extends State<AddDevicePage_1> {
           centerTitle: true,
           elevation: 0,
         ),
-        backgroundColor: Colors.green.withValues(alpha: 0.1),
+        backgroundColor: Color(0xFF000D00),
         body: BlocListener<DeviceBloc, DeviceState>(
           bloc: _deviceBloc,
           listener: (context, state) async {

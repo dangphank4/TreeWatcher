@@ -223,4 +223,28 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get scan => 'Quét';
+
+  @override
+  String get deviceListTitle => 'Danh sách thiết bị';
+
+  @override
+  String get goodMorning => 'Good morning';
+
+  @override
+  String get welcomeBackMessage =>
+      'Chào mừng bạn quay trở lại!\nTại đây bạn có thể quản lý và theo dõi thiết bị.';
+
+  @override
+  String get addDevice => 'Add device';
+
+  @override
+  String deviceIdLabel(Object deviceId) {
+    return 'ID: $deviceId';
+  }
+
+  @override
+  String get retry => 'Thử lại';
+
+  @override
+  String get deviceDetailTitle => 'Chi tiết thiết bị';
 }

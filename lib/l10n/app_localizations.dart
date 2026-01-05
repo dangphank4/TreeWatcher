@@ -505,6 +505,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan'**
   String get scan;
+
+  /// No description provided for @deviceListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Device List'**
+  String get deviceListTitle;
+
+  /// No description provided for @goodMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get goodMorning;
+
+  /// No description provided for @welcomeBackMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back!\nHere you can manage and monitor your devices.'**
+  String get welcomeBackMessage;
+
+  /// No description provided for @addDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Add device'**
+  String get addDevice;
+
+  /// No description provided for @deviceIdLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ID: {deviceId}'**
+  String deviceIdLabel(Object deviceId);
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @deviceDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Details'**
+  String get deviceDetailTitle;
 }
 
 class _AppLocalizationsDelegate

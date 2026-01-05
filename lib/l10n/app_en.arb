@@ -69,5 +69,12 @@
   "password": "Password",
   "deviceName": "Device nickname",
   "connectDevice": "Connect device",
-  "scan": "Scan"
+  "scan": "Scan",
+  "deviceListTitle": "Device List",
+  "goodMorning": "Good morning",
+  "welcomeBackMessage": "Welcome back!\nHere you can manage and monitor your devices.",
+  "addDevice": "Add device",
+  "deviceIdLabel": "ID: {deviceId}",
+  "retry": "Retry",
+  "deviceDetailTitle": "Device Details"
 }

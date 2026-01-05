@@ -223,4 +223,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scan => 'Scan';
+
+  @override
+  String get deviceListTitle => 'Device List';
+
+  @override
+  String get goodMorning => 'Good morning';
+
+  @override
+  String get welcomeBackMessage =>
+      'Welcome back!\nHere you can manage and monitor your devices.';
+
+  @override
+  String get addDevice => 'Add device';
+
+  @override
+  String deviceIdLabel(Object deviceId) {
+    return 'ID: $deviceId';
+  }
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get deviceDetailTitle => 'Device Details';
 }
