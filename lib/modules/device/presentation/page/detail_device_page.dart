@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_api/core/utils/utils.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -18,7 +19,7 @@ class _DetailDevicePageState extends State<DetailDevicePage>
   late final TabController _tabController;
 
   Duration _currentRange = const Duration(days: 7);
-  String _selectedMetric = 'temp';
+  String _selectedMetric = 'light';
 
   @override
   void initState() {
@@ -200,7 +201,7 @@ class _DetailDevicePageState extends State<DetailDevicePage>
         child: Text('$title: Không có dữ liệu'),
       );
     }
-
+    Utils.debugLog(values);
     final min = values.reduce((a, b) => a < b ? a : b);
     final max = values.reduce((a, b) => a > b ? a : b);
     final avg = values.reduce((a, b) => a + b) / values.length;
