@@ -98,7 +98,7 @@ class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
       ) async {
     emit(DeviceLoading());
 
-    final result = await _repo.changeDevicePassword(
+    final result = await repository.changeDevicePassword(
       deviceId: event.deviceId,
       oldPassword: event.oldPassword,
       newPassword: event.newPassword,
