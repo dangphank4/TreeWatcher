@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_api/core/constants/app_dimensions.dart';
+import 'package:flutter_api/core/constants/app_routes.dart';
+import 'package:flutter_api/core/constants/app_styles.dart';
+import 'package:flutter_api/core/extensions/num_extendsion.dart';
+import 'package:flutter_api/core/helpers/navigation_helper.dart';
+import 'package:flutter_api/modules/account/data/repositories/account_repository.dart';
+import 'package:flutter_api/modules/device/general/device_module_routes.dart';
+import 'package:flutter_api/modules/device/presentation/blocs/device_bloc.dart';
+import 'package:flutter_api/modules/device/presentation/blocs/device_event.dart';
+import 'package:flutter_api/modules/device/presentation/blocs/device_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-import '../../../../core/constants/app_routes.dart';
-import '../../../account/data/repositories/account_repository.dart';
-import '../../../auth/presentation/blocs/auth_bloc.dart';
-import '../../../auth/presentation/blocs/auth_event.dart';
-import '../../../device/general/device_module_routes.dart';
-import '../blocs/device_bloc.dart';
-import '../blocs/device_event.dart';
-import '../blocs/device_state.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -19,126 +21,249 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late final AccountRepository _accountRepository;
+  late final DeviceBloc _deviceBloc;
+
   String? _userId;
-  bool _loading = true;
+  String? _userName;
 
   @override
   void initState() {
     super.initState();
+    _accountRepository = Modular.get<AccountRepository>();
+    _deviceBloc = Modular.get<DeviceBloc>();
     _initUser();
   }
 
   Future<void> _initUser() async {
-    final accountRepo = Modular.get<AccountRepository>();
-    final user = await accountRepo.getCurrentUser();
-
+    final user = await _accountRepository.getCurrentUser();
     if (!mounted) return;
 
-    final userId = user?.userId;
-
-    if (userId != null && userId.isNotEmpty) {
-      setState(() {
-        _userId = userId;
-        _loading = false;
-      });
-
-      ModularWatchExtension(context).read<DeviceBloc>().add(LoadDevices(userId));
-    } else {
-      ModularWatchExtension(context).read<AuthBloc>().add(AuthLogoutRequested());
+    if (user?.userId != null) {
+      _userId = user!.userId;
+      _userName = user.fullName;
+      _deviceBloc.add(LoadDevices(_userId!));
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) {
-      return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
-
     return Scaffold(
+      backgroundColor: Colors.green.withValues(alpha: 0.05),
       appBar: AppBar(
-        title: const Text("Thiết bị của tôi"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () {
-              Modular.to.pushNamed(
-                '${AppRoutes.moduleDevice}${DeviceModuleRoutes.addDevice}'
-              );
-            },
+        title: Padding(
+          padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8),
+          child: Text(
+            'Danh sách thiết bị',
+            style: Styles.h1.smb.copyWith(
+              color: Colors.white.withValues(alpha: 0.9),
+            ),
           ),
-        ],
+        ),
       ),
       body: BlocListener<DeviceBloc, DeviceState>(
+        bloc: _deviceBloc,
         listener: (context, state) {
           if (state is DeviceSuccess) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
-        child: BlocBuilder<DeviceBloc, DeviceState>(
-          builder: (context, state) {
-            if (state is DeviceLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            if (state is DeviceLoaded) {
-              if (state.devices.isEmpty) {
-                return const Center(child: Text("Chưa thêm thiết bị nào"));
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: RefreshIndicator(
+            onRefresh: () async {
+              if (_userId != null) {
+                _deviceBloc.add(LoadDevices(_userId!));
               }
+            },
+            child: BlocBuilder<DeviceBloc, DeviceState>(
+              bloc: _deviceBloc,
+              builder: (context, state) {
+                if (state is DeviceLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-              return RefreshIndicator(
-                onRefresh: () async {
-                  ModularWatchExtension(context).read<DeviceBloc>().add(LoadDevices(_userId!));
-                },
-                child: ListView.builder(
-                  itemCount: state.devices.length,
-                  itemBuilder: (context, index) {
-                    final device = state.devices[index];
-                    final deviceId = device['deviceId'];
+                if (state is DeviceFailure) {
+                  return _buildError(state.error);
+                }
 
-                    return Card(
-                      margin: const EdgeInsets.all(10),
-                      child: ListTile(
-                        title: Text(device['name']),
-                        subtitle: Text("ID: $deviceId"),
-                        onTap: () {
-                          Modular.to.pushNamed(
-                            '${AppRoutes.moduleDevice}${DeviceModuleRoutes.detail}',
-                            arguments: {"sensorId": deviceId},
-                          );
-                        },
-                      ),
-                    );
-                  },
-                ),
-              );
-            }
+                if (state is DeviceLoaded) {
+                  return _buildContent(state.devices);
+                }
 
-            if (state is DeviceFailure) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(state.error),
-                    const SizedBox(height: 16),
-                    ElevatedButton(
-                      onPressed: () {
-                        ModularWatchExtension(context).read<DeviceBloc>().add(LoadDevices(_userId!));
-                      },
-                      child: const Text("Thử lại"),
-                    ),
-                  ],
-                ),
-              );
-            }
-
-            // DeviceInitial or other states
-            return const Center(child: CircularProgressIndicator());
-          },
+                return const SizedBox.shrink();
+              },
+            ),
+          ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildContent(List devices) {
+    return ListView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      children: [
+        _buildHeader(),
+        const SizedBox(height: 20),
+        ...devices.map(_buildDeviceItem),
+        AppDimensions.paddingNavBar.verticalSpace,
+      ],
+    );
+  }
+
+  Widget _buildHeader() {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              20.verticalSpace,
+              Text(
+                'Good morning $_userName',
+                style: Styles.large.smb.copyWith(color: Colors.white),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Chào mừng bạn quay trở lại!\n'
+                'Tại đây bạn có thể quản lý và theo dõi thiết bị.',
+                style: Styles.medium.regular.copyWith(color: Colors.white),
+              ),
+            ],
+          ),
+        ),
+        16.horizontalSpace,
+        _buildAddDeviceButton(),
+      ],
+    );
+  }
+
+  Widget _buildAddDeviceButton() {
+    return Column(
+      children: [
+        InkWell(
+          onTap: () {
+            NavigationHelper.navigate(
+              '${AppRoutes.moduleDevice}${DeviceModuleRoutes.addDevice}',
+            );
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.8)),
+            ),
+            child: const Icon(Icons.add, color: Colors.white),
+          ),
+        ),
+        4.verticalSpace,
+        Text(
+          'Add device',
+          style: Styles.xsmall.smb.copyWith(
+            color: Colors.white.withValues(alpha: 0.8),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDeviceItem(dynamic device) {
+    final deviceId = device['deviceId'];
+    final deviceName = device['name'];
+
+    return Column(
+      children: [
+        InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () {
+            Modular.to.pushNamed(
+              '${AppRoutes.moduleDevice}${DeviceModuleRoutes.detail}',
+              arguments: {'sensorId': deviceId},
+            );
+          },
+          child: Container(
+            width: double.infinity,
+            height: 100,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.6), width: 2),
+              color: Colors.green.shade300.withValues(alpha: 0.6),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.15),
+                  blurRadius: 8,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                Container(
+                  width: 56,
+                  height: 56,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.25),
+                  ),
+                  child: Icon(Icons.sensors, size: 28, color: Colors.white),
+                ),
+
+                16.horizontalSpace,
+
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        deviceName,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: Styles.large.smb.copyWith(color: Colors.white),
+                      ),
+                      6.verticalSpace,
+                      Text(
+                        'ID: $deviceId',
+                        style: Styles.small.regular.copyWith(
+                          color: Colors.white.withValues(alpha: 0.85),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Icon(Icons.more_vert),
+              ],
+            ),
+          ),
+        ),
+        16.verticalSpace
+      ],
+    );
+  }
+
+  Widget _buildError(String error) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(error),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: () {
+              if (_userId != null) {
+                _deviceBloc.add(LoadDevices(_userId!));
+              }
+            },
+            child: const Text('Thử lại'),
+          ),
+        ],
       ),
     );
   }

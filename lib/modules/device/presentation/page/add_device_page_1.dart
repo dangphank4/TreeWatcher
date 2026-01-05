@@ -43,7 +43,6 @@ class _AddDevicePageState extends State<AddDevicePage_1> {
     super.initState();
     _accountRepository = Modular.get<AccountRepository>();
     _deviceBloc = Modular.get<DeviceBloc>();
-    Utils.debugLog('uuid: $userId');
     _loadUser();
   }
 
@@ -529,16 +528,15 @@ class _AddDevicePageState extends State<AddDevicePage_1> {
 
   void _handleQrResult(String raw) {
     try {
-      final data = jsonDecode(raw);
+      final data = raw.trim();
 
       setState(() {
-        _deviceCodeController.text = data['deviceId'] ?? '';
+        _deviceCodeController.text = data ?? '';
       });
 
       _showSuccessSnackBar('Quét QR thành công');
     } catch (e) {
-
-      _showSuccessSnackBar('Đã lấy mã thiết bị từ QR');
+      _showSuccessSnackBar('Lỗi qr');
     }
   }
 
