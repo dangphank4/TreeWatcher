@@ -50,6 +50,18 @@ class RenameDevice extends DeviceEvent {
   List<Object?> get props => [userId, deviceId, newName];
 }
 
+class ChangeDevicePassword extends DeviceEvent {
+  final String deviceId;
+  final String oldPassword;
+  final String newPassword;
+
+  const ChangeDevicePassword({
+    required this.deviceId,
+    required this.oldPassword,
+    required this.newPassword,
+  });
+}
+
 /// Xoá thiết bị
 class DeleteDevice extends DeviceEvent {
   final String userId;

@@ -186,6 +186,7 @@ class _HomePageState extends State<HomePage> {
               '${AppRoutes.moduleDevice}${DeviceModuleRoutes.detail}',
               arguments: {'sensorId': deviceId},
             );
+
           },
           child: Container(
             width: double.infinity,
