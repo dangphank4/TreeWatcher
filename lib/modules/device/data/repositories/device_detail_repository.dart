@@ -63,11 +63,20 @@ class DeviceDetailRepository {
     required String deviceId,
     required DateTime from,
     required DateTime to,
-  }) {
-    return logDs.getLogs(
+  }) async {
+    final list = await logDs.getLogs(
       deviceId: deviceId,
       from: from,
       to: to,
     );
+
+    print("=== Logs from $deviceId ===");
+    for (final log in list) {
+      print(log);
+    }
+    print("=== Total: ${list.length} logs ===");
+
+    return list;
   }
+
 }
