@@ -1,5 +1,7 @@
 // device_module.dart
+import 'package:flutter_api/modules/account/presentation/blocs/account_bloc.dart';
 import 'package:flutter_api/modules/device/presentation/page/add_device_page_1.dart';
+import 'package:flutter_api/modules/device/presentation/page/detail_device_page.dart';
 import 'package:flutter_api/modules/device/presentation/page/home_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,33 +15,23 @@ import 'general/device_module_routes.dart';
 class DeviceModule extends Module {
   @override
   void binds(Injector i) {
-    i.addSingleton<DeviceApi>(DeviceApi.new);
+    // TODO: implement binds
+    super.binds(i);
+  }
 
-    i.addSingleton<DeviceRepository>(
-          () => DeviceRepository(api: i.get<DeviceApi>()),
-    );
-
-    i.addSingleton<DeviceBloc>(
-          () => DeviceBloc(i.get<DeviceRepository>()),
+  @override
+  void exportedBinds(Injector i) {
+    i.addSingleton(() => DeviceApi());
+    i.addSingleton(() => DeviceRepository(api: Modular.get<DeviceApi>()));
+    i.addSingleton(
+      () => DeviceBloc(repository: Modular.get<DeviceRepository>()),
     );
   }
 
   @override
   void routes(RouteManager r) {
-    r.child(
-      DeviceModuleRoutes.addDevice,
-      child: (_) => BlocProvider.value(
-        value: Modular.get<DeviceBloc>(),
-        child: const AddDevicePage(),
-      ),
-    );
-
-    r.child(
-      DeviceModuleRoutes.scanQr,
-      child: (_) => BlocProvider.value(
-        value: Modular.get<DeviceBloc>(),
-        child: const QrScanPage(),
-      ),
-    );
+    r.child(DeviceModuleRoutes.addDevice, child: (context) => AddDevicePage_1(),);
+    r.child(DeviceModuleRoutes.scanQr, child: (_) => QrScanPage());
+    r.child(DeviceModuleRoutes.detail, child: (_) => DetailDevicePage());
   }
 }

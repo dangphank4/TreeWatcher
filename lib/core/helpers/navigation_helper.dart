@@ -21,6 +21,12 @@ class NavigationHelper {
     //   arguments: args,
     // );
   }
+  static Future<T?> navigateForResult<T>(
+      String route, {
+        Map<String, dynamic> args = const {'': null},
+      }) {
+    return Modular.to.pushNamed<T>(route, arguments: args);
+  }
 
   static Future<void> asyncNavigate(String route) async {
     await Modular.to.pushNamed(route);

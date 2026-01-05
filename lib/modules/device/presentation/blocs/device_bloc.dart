@@ -5,9 +5,9 @@ import 'device_event.dart';
 import 'device_state.dart';
 
 class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
-  final DeviceRepository _repo;
+  final DeviceRepository repository;
 
-  DeviceBloc(this._repo) : super(DeviceInitial()) {
+  DeviceBloc({required this.repository}) : super(DeviceInitial()) {
     on<LoadDevices>(_onLoadDevices);
     on<RegisterDevice>(_onRegisterDevice);
     on<RenameDevice>(_onRenameDevice);
@@ -21,7 +21,7 @@ class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
       ) async {
     emit(DeviceLoading());
 
-    final result = await _repo.getDevices(event.userId);
+    final result = await repository.getDevices(event.userId);
 
     if (result.isSuccess) {
       emit(DeviceLoaded(result.data!));
@@ -36,7 +36,7 @@ class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
       ) async {
     emit(DeviceLoading());
 
-    final result = await _repo.registerDevice(
+    final result = await repository.registerDevice(
       userId: event.userId,
       deviceId: event.deviceId,
       deviceName: event.deviceName,
@@ -59,7 +59,7 @@ class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
       ) async {
     emit(DeviceLoading());
 
-    final result = await _repo.renameDevice(
+    final result = await repository.renameDevice(
       userId: event.userId,
       deviceId: event.deviceId,
       newName: event.newName,
@@ -79,7 +79,7 @@ class DeviceBloc extends Bloc<DeviceEvent, DeviceState> {
       ) async {
     emit(DeviceLoading());
 
-    final result = await _repo.deleteDevice(
+    final result = await repository.deleteDevice(
       userId: event.userId,
       deviceId: event.deviceId,
     );
