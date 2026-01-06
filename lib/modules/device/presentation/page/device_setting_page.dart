@@ -3,6 +3,7 @@ import 'package:flutter_api/core/components/confirm_dialog.dart';
 import 'package:flutter_api/core/constants/app_styles.dart';
 import 'package:flutter_api/core/extensions/localized_extendsion.dart';
 import 'package:flutter_api/core/extensions/num_extendsion.dart';
+import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/core/utils/utils.dart';
 import 'package:flutter_api/modules/device/presentation/blocs/device_bloc.dart';
 import 'package:flutter_api/modules/device/presentation/blocs/device_event.dart';
@@ -313,7 +314,6 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
         newPass.length >= 6 &&
         oldPass != newPass;
 
-    // ❌ Không có thay đổi gì
     if (!willRename && !willChangePassword) {
       _showSnack(
         context.localization.noChanges,
@@ -353,6 +353,7 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
       _oldPasswordController.clear();
       _newPasswordController.clear();
     }
+    NavigationHelper.goBack();
   }
 
 
@@ -369,6 +370,7 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
         deviceId: deviceId,
       ));
     }
+    NavigationHelper.goBack();
   }
 
   void _showSnack(String message) {
