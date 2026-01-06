@@ -223,4 +223,84 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scan => 'Scan';
+
+  @override
+  String get deviceListTitle => 'Device List';
+
+  @override
+  String get goodMorning => 'Good morning';
+
+  @override
+  String get welcomeBackMessage =>
+      'Welcome back!\nHere you can manage and monitor your devices.';
+
+  @override
+  String get addDevice => 'Add device';
+
+  @override
+  String deviceIdLabel(Object id) {
+    return 'ID: $id';
+  }
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get deviceDetailTitle => 'Device Details';
+
+  @override
+  String get deviceSettingsTitle => 'Device Settings';
+
+  @override
+  String get deviceRenameTitle => 'Rename Device';
+
+  @override
+  String get deviceRenameHint => 'Enter new name';
+
+  @override
+  String get deviceSecurityTitle => 'Security';
+
+  @override
+  String get deviceChangePassword => 'Change Password';
+
+  @override
+  String get deviceOldPassword => 'Current password';
+
+  @override
+  String get deviceNewPassword => 'New password';
+
+  @override
+  String get saveChanges => 'Save changes';
+
+  @override
+  String get dangerZone => 'Danger Zone';
+
+  @override
+  String get deleteDevice => 'Delete device';
+
+  @override
+  String get deleteDeviceTitle => 'Delete device';
+
+  @override
+  String get deleteDeviceConfirm =>
+      'Are you sure you want to delete this device?';
+
+  @override
+  String get noChanges => 'No changes detected';
+
+  @override
+  String get errorEmptyPassword => 'Please enter all password fields';
+
+  @override
+  String get errorPasswordTooShort =>
+      'New password must be at least 6 characters';
+
+  @override
+  String get errorPasswordSame =>
+      'New password must be different from old password';
+
+  @override
+  String confirmSaveChanges(Object deviceName) {
+    return 'Do you really want to change infomation of $deviceName?';
+  }
 }

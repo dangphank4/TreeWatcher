@@ -6,4 +6,6 @@ class DeviceModuleRoutes {
   static const String scanQr = '/scan-qr';
 
   static const String detail = '/detail';
+
+  static const String setting = '/setting';
 }

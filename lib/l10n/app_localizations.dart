@@ -505,6 +505,150 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan'**
   String get scan;
+
+  /// No description provided for @deviceListTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Device List'**
+  String get deviceListTitle;
+
+  /// No description provided for @goodMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get goodMorning;
+
+  /// No description provided for @welcomeBackMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back!\nHere you can manage and monitor your devices.'**
+  String get welcomeBackMessage;
+
+  /// No description provided for @addDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Add device'**
+  String get addDevice;
+
+  /// No description provided for @deviceIdLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'ID: {id}'**
+  String deviceIdLabel(Object id);
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @deviceDetailTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Details'**
+  String get deviceDetailTitle;
+
+  /// No description provided for @deviceSettingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Device Settings'**
+  String get deviceSettingsTitle;
+
+  /// No description provided for @deviceRenameTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Rename Device'**
+  String get deviceRenameTitle;
+
+  /// No description provided for @deviceRenameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter new name'**
+  String get deviceRenameHint;
+
+  /// No description provided for @deviceSecurityTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Security'**
+  String get deviceSecurityTitle;
+
+  /// No description provided for @deviceChangePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get deviceChangePassword;
+
+  /// No description provided for @deviceOldPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Current password'**
+  String get deviceOldPassword;
+
+  /// No description provided for @deviceNewPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get deviceNewPassword;
+
+  /// No description provided for @saveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Save changes'**
+  String get saveChanges;
+
+  /// No description provided for @dangerZone.
+  ///
+  /// In en, this message translates to:
+  /// **'Danger Zone'**
+  String get dangerZone;
+
+  /// No description provided for @deleteDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete device'**
+  String get deleteDevice;
+
+  /// No description provided for @deleteDeviceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete device'**
+  String get deleteDeviceTitle;
+
+  /// No description provided for @deleteDeviceConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete this device?'**
+  String get deleteDeviceConfirm;
+
+  /// No description provided for @noChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'No changes detected'**
+  String get noChanges;
+
+  /// No description provided for @errorEmptyPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter all password fields'**
+  String get errorEmptyPassword;
+
+  /// No description provided for @errorPasswordTooShort.
+  ///
+  /// In en, this message translates to:
+  /// **'New password must be at least 6 characters'**
+  String get errorPasswordTooShort;
+
+  /// No description provided for @errorPasswordSame.
+  ///
+  /// In en, this message translates to:
+  /// **'New password must be different from old password'**
+  String get errorPasswordSame;
+
+  /// No description provided for @confirmSaveChanges.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you really want to change infomation of {deviceName}?'**
+  String confirmSaveChanges(Object deviceName);
 }
 
 class _AppLocalizationsDelegate

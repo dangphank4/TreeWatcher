@@ -69,5 +69,37 @@
   "password": "Mật khẩu",
   "deviceName": "Đặt tên gợi nhớ",
   "connectDevice": "Kết nối thiết bị",
-  "scan": "Quét"
+  "scan": "Quét",
+  "deviceListTitle": "Danh sách thiết bị",
+  "goodMorning": "Good morning",
+  "welcomeBackMessage": "Chào mừng bạn quay trở lại!\nTại đây bạn có thể quản lý và theo dõi thiết bị.",
+  "addDevice": "Add device",
+  "deviceIdLabel": "ID: {deviceId}",
+  "retry": "Thử lại",
+  "deviceDetailTitle": "Chi tiết thiết bị",
+  "deviceSettingsTitle": "Cài đặt thiết bị",
+  "deviceIdLabel": "ID: {id}",
+
+  "deviceRenameTitle": "Đổi tên thiết bị",
+  "deviceRenameHint": "Nhập tên mới",
+
+  "deviceSecurityTitle": "Bảo mật",
+  "deviceChangePassword": "Đổi mật khẩu",
+  "deviceOldPassword": "Mật khẩu hiện tại",
+  "deviceNewPassword": "Mật khẩu mới",
+
+  "saveChanges": "Lưu thay đổi",
+
+  "dangerZone": "Vùng nguy hiểm",
+  "deleteDevice": "Xóa thiết bị",
+
+  "deleteDeviceTitle": "Xóa thiết bị",
+  "deleteDeviceConfirm": "Bạn có chắc chắn muốn xóa thiết bị này?",
+
+  "noChanges": "Không có thay đổi",
+
+  "errorEmptyPassword": "Vui lòng nhập đầy đủ mật khẩu",
+  "errorPasswordTooShort": "Mật khẩu mới tối thiểu 6 ký tự",
+  "errorPasswordSame": "Mật khẩu mới phải khác mật khẩu cũ",
+  "confirmSaveChanges": "Bạn thực sự muốn thay đổi thông tin của {deviceName}?"
 }

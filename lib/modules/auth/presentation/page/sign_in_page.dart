@@ -191,18 +191,13 @@ class _SignInPageState extends State<SignInPage> {
                 ),
                 24.verticalSpace,
 
-                // BUTTON LOGIN
+                // BUTTON LOGIN (InkWell)
                 SizedBox(
                   width: double.infinity,
                   height: 48,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blueAccent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: () async {
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () async {
                       final email = _emailController.text;
                       final password = _passwordController.text;
 
@@ -210,9 +205,7 @@ class _SignInPageState extends State<SignInPage> {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
                             content: Text(
-                              context
-                                  .localization
-                                  .pleaseEnterCompleteInformation,
+                              context.localization.pleaseEnterCompleteInformation,
                             ),
                           ),
                         );
@@ -222,19 +215,25 @@ class _SignInPageState extends State<SignInPage> {
                       // Giả lập loading
                       await Future.delayed(const Duration(milliseconds: 500));
 
-                      // NavigationHelper.replace(
-                      //   '${AppRoutes.moduleApp}${AppModuleRoutes.main}',
-                      // );
-                      Utils.debugLog('Login successed}');
+                      Utils.debugLog('Login successed');
                       _authBloc.add(
                         AuthLoginRequested(email: email, password: password),
                       );
                     },
-                    child: Text(
-                      context.localization.logIn,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                    child: Ink(
+                      decoration: BoxDecoration(
+                        color: Colors.blueAccent,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: Text(
+                          context.localization.logIn,
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
                   ),

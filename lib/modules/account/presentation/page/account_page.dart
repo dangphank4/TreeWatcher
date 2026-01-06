@@ -61,7 +61,9 @@ class _AccountPageState extends State<AccountPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF000D00),
       appBar: AppBar(
+        backgroundColor: Color(0xFF001600),
         title: Container(
           padding: const EdgeInsets.only(left: 16, bottom: 8, top: 16),
           child: Text(
@@ -70,6 +72,7 @@ class _AccountPageState extends State<AccountPage> {
           ),
         ),
       ),
+    //  backgroundColor: Color(0xFF000D00),
       body: SafeArea(
         child: isLoading
             ? const Center(child: CircularProgressIndicator())
