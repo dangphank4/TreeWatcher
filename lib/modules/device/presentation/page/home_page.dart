@@ -49,7 +49,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Color(0xFF000D00),
+      backgroundColor: Color(0xFF000D00),
       appBar: AppBar(
         backgroundColor: Color(0xFF001600),
         title: Padding(
@@ -184,7 +184,7 @@ class _HomePageState extends State<HomePage> {
           onTap: () {
             NavigationHelper.navigate(
               '${AppRoutes.moduleDevice}${DeviceModuleRoutes.detail}',
-              args: {'deviceId': deviceId},
+              args: {'deviceId': deviceId, 'deviceName': deviceName, 'userId': _userId},
             );
           },
           child: Container(
