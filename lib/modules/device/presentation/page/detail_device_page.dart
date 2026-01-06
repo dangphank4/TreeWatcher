@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_api/core/constants/app_routes.dart';
 import 'package:flutter_api/core/constants/app_styles.dart';
+import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/core/utils/utils.dart';
+import 'package:flutter_api/modules/device/general/device_module_routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -125,6 +128,7 @@ class _DetailDevicePageState extends State<DetailDevicePage>
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          /// LEFT INFO
           Row(
             children: [
               Icon(Icons.settings, color: _accent),
@@ -132,9 +136,11 @@ class _DetailDevicePageState extends State<DetailDevicePage>
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Chế độ',
-                      style: Styles.small.regular
-                          .copyWith(color: Colors.white60)),
+                  Text(
+                    'Chế độ',
+                    style: Styles.small.regular
+                        .copyWith(color: Colors.white60),
+                  ),
                   Text(
                     isAuto ? 'Tự động' : 'Thủ công',
                     style:
@@ -144,18 +150,54 @@ class _DetailDevicePageState extends State<DetailDevicePage>
               ),
             ],
           ),
+
+          /// RIGHT ACTION
           Row(
             children: [
-              Switch(
-                value: isAuto,
-                activeColor: _accent,
-                onChanged: (_) {},
-              ),
-              const SizedBox(width: 8),
               Icon(
                 Icons.water_drop,
-                size: 26,
+                size: 22,
                 color: motorOn ? Colors.blue : Colors.white24,
+              ),
+              const SizedBox(width: 10),
+
+              InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: () {
+                  NavigationHelper.navigate(
+                    '${AppRoutes.moduleDevice}${DeviceModuleRoutes.control}',
+                    args: {
+                      'deviceId': deviceId,
+                      'deviceName': deviceName,
+                      'userId': userId,
+                    },
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 14, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: _accent,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: const [
+                      Icon(
+                        Icons.tune,
+                        size: 18,
+                        color: Colors.black,
+                      ),
+                      SizedBox(width: 6),
+                      Text(
+                        'Điều khiển',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),
@@ -163,6 +205,7 @@ class _DetailDevicePageState extends State<DetailDevicePage>
       ),
     );
   }
+
 
   // ================= SENSOR GRID =================
   Widget _buildSensorGrid(Map<String, dynamic> sensor) {
@@ -432,7 +475,7 @@ class _DetailDevicePageState extends State<DetailDevicePage>
                 leftTitles: AxisTitles(
                   sideTitles: SideTitles(
                     showTitles: true,
-                    reservedSize: 46, // ⭐ chừa đủ chỗ, không xuống dòng
+                    reservedSize: 46,
                     getTitlesWidget: (value, meta) {
                       return Padding(
                         padding: const EdgeInsets.only(right: 6),

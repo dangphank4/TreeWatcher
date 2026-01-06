@@ -8,4 +8,6 @@ class DeviceModuleRoutes {
   static const String detail = '/detail';
 
   static const String setting = '/setting';
+
+  static const String control = '/control';
 }
