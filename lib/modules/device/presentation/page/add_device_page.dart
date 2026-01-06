@@ -91,7 +91,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
                   'Thiết bị đã được thêm. Bạn có thể đặt tên sau.',
                 );
 
-                Navigator.pop(context, true);
+                // Navigator.pop(context, true);
                 return;
               }
 
