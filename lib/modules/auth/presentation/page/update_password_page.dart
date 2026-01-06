@@ -100,7 +100,9 @@ class _UpdatePasswordPageState extends State<UpdatePasswordPage> {
         }
       },
       child: Scaffold(
+        backgroundColor: Color(0xFF000D00),
         appBar: AppBar(
+          backgroundColor: Color(0xFF001600),
           title: Title(
             color: Colors.grey,
             child: Text(

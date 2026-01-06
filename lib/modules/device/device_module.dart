@@ -1,9 +1,9 @@
 import 'package:flutter_api/modules/device/presentation/blocs/device_detail_bloc.dart';
-import 'package:flutter_api/modules/device/presentation/page/add_device_page_1.dart';
+import 'package:flutter_api/modules/device/presentation/page/add_device_page.dart';
 import 'package:flutter_api/modules/device/presentation/page/detail_device_page.dart';
+import 'package:flutter_api/modules/device/presentation/page/device_setting_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'data/datasource/device_api.dart';
 import 'data/datasource/device_realtime_datasource.dart';
 import 'data/datasource/device_log_datasource.dart';
@@ -63,7 +63,7 @@ class DeviceModule extends Module {
   void routes(RouteManager r) {
     r.child(
       DeviceModuleRoutes.addDevice,
-      child: (context) => AddDevicePage_1(),
+      child: (context) => AddDevicePage(),
     );
 
     r.child(
@@ -76,6 +76,14 @@ class DeviceModule extends Module {
       child: (context) => BlocProvider<DeviceDetailBloc>(
         create: (context) => Modular.get<DeviceDetailBloc>(),
         child: const DetailDevicePage(),
+      ),
+    );
+
+    r.child(
+      DeviceModuleRoutes.setting,
+      child: (context) => BlocProvider<DeviceDetailBloc>(
+        create: (context) => Modular.get<DeviceDetailBloc>(),
+        child: const DeviceSettingPage(),
       ),
     );
   }

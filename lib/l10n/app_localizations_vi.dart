@@ -238,8 +238,8 @@ class AppLocalizationsVi extends AppLocalizations {
   String get addDevice => 'Add device';
 
   @override
-  String deviceIdLabel(Object deviceId) {
-    return 'ID: $deviceId';
+  String deviceIdLabel(Object id) {
+    return 'ID: $id';
   }
 
   @override
@@ -247,4 +247,57 @@ class AppLocalizationsVi extends AppLocalizations {
 
   @override
   String get deviceDetailTitle => 'Chi tiết thiết bị';
+
+  @override
+  String get deviceSettingsTitle => 'Cài đặt thiết bị';
+
+  @override
+  String get deviceRenameTitle => 'Đổi tên thiết bị';
+
+  @override
+  String get deviceRenameHint => 'Nhập tên mới';
+
+  @override
+  String get deviceSecurityTitle => 'Bảo mật';
+
+  @override
+  String get deviceChangePassword => 'Đổi mật khẩu';
+
+  @override
+  String get deviceOldPassword => 'Mật khẩu hiện tại';
+
+  @override
+  String get deviceNewPassword => 'Mật khẩu mới';
+
+  @override
+  String get saveChanges => 'Lưu thay đổi';
+
+  @override
+  String get dangerZone => 'Vùng nguy hiểm';
+
+  @override
+  String get deleteDevice => 'Xóa thiết bị';
+
+  @override
+  String get deleteDeviceTitle => 'Xóa thiết bị';
+
+  @override
+  String get deleteDeviceConfirm => 'Bạn có chắc chắn muốn xóa thiết bị này?';
+
+  @override
+  String get noChanges => 'Không có thay đổi';
+
+  @override
+  String get errorEmptyPassword => 'Vui lòng nhập đầy đủ mật khẩu';
+
+  @override
+  String get errorPasswordTooShort => 'Mật khẩu mới tối thiểu 6 ký tự';
+
+  @override
+  String get errorPasswordSame => 'Mật khẩu mới phải khác mật khẩu cũ';
+
+  @override
+  String confirmSaveChanges(Object deviceName) {
+    return 'Bạn thực sự muốn thay đổi thông tin của $deviceName?';
+  }
 }

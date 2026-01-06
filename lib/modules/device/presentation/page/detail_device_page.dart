@@ -26,7 +26,7 @@ class _DetailDevicePageState extends State<DetailDevicePage>
     super.initState();
 
     final args = Modular.args.data as Map<String, dynamic>;
-    deviceId = args['sensorId'];
+    deviceId = args['deviceId'];
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final now = DateTime.now();

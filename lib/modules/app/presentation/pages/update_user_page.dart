@@ -118,7 +118,9 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xFF000D00),
       appBar: AppBar(
+        backgroundColor: Color(0xFF001600),
         title: Title(
           color: Colors.grey,
           child: Text(
@@ -127,7 +129,6 @@ class _UpdateUserPageState extends State<UpdateUserPage> {
           ),
         ),
       ),
-      backgroundColor: Colors.grey.shade900,
       body: SafeArea(
         child: RefreshIndicator(
           onRefresh: _subscribeUser,

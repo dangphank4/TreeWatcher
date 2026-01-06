@@ -13,7 +13,6 @@ import 'package:flutter_api/modules/device/presentation/blocs/device_state.dart'
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -50,8 +49,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.green.withValues(alpha: 0.05),
+        backgroundColor: Color(0xFF000D00),
       appBar: AppBar(
+        backgroundColor: Color(0xFF001600),
         title: Padding(
           padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8),
           child: Text(
@@ -129,7 +129,7 @@ class _HomePageState extends State<HomePage> {
               ),
               const SizedBox(height: 8),
               Text(
-                  context.localization.welcomeBackMessage,
+                context.localization.welcomeBackMessage,
                 style: Styles.medium.regular.copyWith(color: Colors.white),
               ),
             ],
@@ -182,11 +182,10 @@ class _HomePageState extends State<HomePage> {
         InkWell(
           borderRadius: BorderRadius.circular(20),
           onTap: () {
-            Modular.to.pushNamed(
+            NavigationHelper.navigate(
               '${AppRoutes.moduleDevice}${DeviceModuleRoutes.detail}',
-              arguments: {'sensorId': deviceId},
+              args: {'deviceId': deviceId},
             );
-
           },
           child: Container(
             width: double.infinity,
@@ -194,7 +193,10 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(color: Colors.white.withValues(alpha: 0.6), width: 2),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.6),
+                width: 2,
+              ),
               color: Colors.green.shade300.withValues(alpha: 0.6),
               boxShadow: [
                 BoxShadow(
@@ -239,12 +241,28 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                 ),
-                Icon(Icons.more_vert),
+                InkWell(
+                  child: SizedBox(
+                    child: IconButton(
+                      onPressed: () {
+                        NavigationHelper.navigate(
+                          '${AppRoutes.moduleDevice}${DeviceModuleRoutes.setting}',
+                          args: {
+                            'deviceId': deviceId,
+                            'deviceName': deviceName,
+                            'userId': _userId,
+                          },
+                        );
+                      },
+                      icon: Icon(Icons.more_vert),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
         ),
-        16.verticalSpace
+        16.verticalSpace,
       ],
     );
   }
