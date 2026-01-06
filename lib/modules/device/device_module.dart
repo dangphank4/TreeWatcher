@@ -1,6 +1,7 @@
 import 'package:flutter_api/modules/device/presentation/blocs/device_detail_bloc.dart';
 import 'package:flutter_api/modules/device/presentation/page/add_device_page.dart';
 import 'package:flutter_api/modules/device/presentation/page/detail_device_page.dart';
+import 'package:flutter_api/modules/device/presentation/page/device_control_page.dart';
 import 'package:flutter_api/modules/device/presentation/page/device_setting_page.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -84,6 +85,14 @@ class DeviceModule extends Module {
       child: (context) => BlocProvider<DeviceDetailBloc>(
         create: (context) => Modular.get<DeviceDetailBloc>(),
         child: const DeviceSettingPage(),
+      ),
+    );
+
+    r.child(
+      DeviceModuleRoutes.control,
+      child: (context) => BlocProvider<DeviceDetailBloc>(
+        create: (context) => Modular.get<DeviceDetailBloc>(),
+        child: DeviceControlPage(),
       ),
     );
   }
