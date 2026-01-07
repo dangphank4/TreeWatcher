@@ -395,8 +395,41 @@ class _DetailDevicePageState extends State<DetailDevicePage>
     );
   }
 
-  Widget _buildLineChartRaw(List<Map<String, dynamic>> logs) {
-    final spots = _toSpots(logs, _selectedMetric);
+  // Hàm giảm bớt số lượng log hiển thị để biểu đồ không bị dày
+  List<Map<String, dynamic>> _downsampleLogs(List<Map<String, dynamic>> logs) {
+    // Nếu số lượng log ít hơn ngưỡng (ví dụ 60 điểm), hiển thị hết
+    const int targetPoints = 60;
+
+    if (logs.length <= targetPoints) {
+      return logs;
+    }
+
+    // Tính bước nhảy. Ví dụ có 1200 log, muốn còn 60 log => lấy mỗi 20 log 1 lần
+    int step = (logs.length / targetPoints).ceil();
+
+    List<Map<String, dynamic>> sampled = [];
+    for (int i = 0; i < logs.length; i += step) {
+      sampled.add(logs[i]);
+    }
+
+    // Đảm bảo luôn lấy điểm cuối cùng để biểu đồ cập nhật nhất
+    if (sampled.last != logs.last) {
+      sampled.add(logs.last);
+    }
+
+    return sampled;
+  }
+
+  // ... (Giữ nguyên các hàm _toSpots, _cardDecoration, _metricColor cũ)
+
+
+
+  Widget _buildLineChartRaw(List<Map<String, dynamic>> rawLogs) {
+    // 1. Áp dụng lọc dữ liệu trước khi tạo Spot
+    final processedLogs = _downsampleLogs(rawLogs);
+
+    // 2. Tạo spots từ dữ liệu đã lọc
+    final spots = _toSpots(processedLogs, _selectedMetric);
 
     if (spots.length < 2) {
       return const Center(
@@ -417,7 +450,7 @@ class _DetailDevicePageState extends State<DetailDevicePage>
       LineChartData(
         gridData: FlGridData(
           show: true,
-          drawVerticalLine: false, // Tắt đường kẻ dọc cho đỡ rối
+          drawVerticalLine: false,
           getDrawingHorizontalLine: (value) => FlLine(
             color: Colors.white.withValues(alpha: 0.05),
             strokeWidth: 1,
@@ -431,19 +464,26 @@ class _DetailDevicePageState extends State<DetailDevicePage>
             sideTitles: SideTitles(
               showTitles: true,
               reservedSize: 30,
-              interval: (spots.length / 4).clamp(1, double.infinity), // Hiển thị khoảng 4-5 nhãn
+              // Vì số lượng điểm đã giảm xuống (~60), ta có thể fix interval hoặc để tự động
+              interval: (spots.length / 5).clamp(1, double.infinity),
               getTitlesWidget: (value, meta) {
                 final index = value.toInt();
-                if (index < 0 || index >= logs.length) return const SizedBox();
+                // LƯU Ý: Phải dùng processedLogs ở đây, không dùng rawLogs
+                if (index < 0 || index >= processedLogs.length) return const SizedBox();
 
-                final DateTime date = logs[index]['logged_at'] is DateTime
-                    ? logs[index]['logged_at']
-                    : logs[index]['logged_at'].toDate();
+                final log = processedLogs[index]; // Lấy từ list đã lọc
+                final DateTime date = log['logged_at'] is DateTime
+                    ? log['logged_at']
+                    : log['logged_at'].toDate();
 
-                // Tự động đổi định dạng theo phạm vi thời gian
                 String text = _currentRange.inDays >= 1
-                    ? DateFormat('HH:mm').format(date)
-                    : DateFormat('mm:ss').format(date);
+                    ? DateFormat('HH:mm').format(date) // 24h hoặc 7d hiện giờ:phút
+                    : DateFormat('mm:ss').format(date); // 1h hiện phút:giây
+
+                // Nếu là 7 ngày, có thể hiển thị thêm ngày
+                if (_currentRange.inDays >= 7) {
+                  text = DateFormat('dd/MM').format(date);
+                }
 
                 return SideTitleWidget(
                   axisSide: meta.axisSide,
@@ -469,15 +509,18 @@ class _DetailDevicePageState extends State<DetailDevicePage>
         minY: minY - padding,
         maxY: maxY + padding,
 
-        // Cấu hình Tooltip khi nhấn vào điểm
         lineTouchData: LineTouchData(
           touchTooltipData: LineTouchTooltipData(
-          //  getTooltipColor: (group) => _card.withValues(alpha: 0.9),
             getTooltipItems: (touchedSpots) {
               return touchedSpots.map((spot) {
-                final date = logs[spot.x.toInt()]['logged_at'];
-                final timeStr = DateFormat('HH:mm:ss dd/MM').format(
+                // LƯU Ý: Phải dùng processedLogs ở đây để map đúng index
+                final index = spot.x.toInt();
+                if (index >= processedLogs.length) return null;
+
+                final date = processedLogs[index]['logged_at'];
+                final timeStr = DateFormat('HH:mm dd/MM').format(
                     date is DateTime ? date : date.toDate());
+
                 return LineTooltipItem(
                   '${spot.y.toStringAsFixed(1)}\n',
                   TextStyle(color: currentColor, fontWeight: FontWeight.bold),
@@ -497,11 +540,10 @@ class _DetailDevicePageState extends State<DetailDevicePage>
           LineChartBarData(
             spots: spots,
             isCurved: true,
-            //curveStyle: CurveStyle.straight, // Hoặc dùng true để cong mềm mại
             color: currentColor,
             barWidth: 3,
             isStrokeCapRound: true,
-            dotData: const FlDotData(show: false), // Ẩn chấm để biểu đồ mượt hơn
+            dotData: const FlDotData(show: false),
             belowBarData: BarAreaData(
               show: true,
               gradient: LinearGradient(
@@ -518,6 +560,7 @@ class _DetailDevicePageState extends State<DetailDevicePage>
       ),
     );
   }
+
 
   String _formatY(double value) {
     if (value >= 1000) {
