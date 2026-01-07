@@ -68,9 +68,6 @@ class SetScheduleTime extends DeviceDetailEvent {
   });
 }
 
-/// =======================
-/// STATE
-/// =======================
 
 class DeviceDetailState {
   final Map<String, dynamic>? sensor;

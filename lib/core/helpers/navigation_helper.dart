@@ -78,11 +78,10 @@ class NavigationHelper {
     );
   }
 
-  static void goBack() {
-    // Navigator.pop(AppKeys.navigatorKey.currentContext!);
-    // AppKeys.navigatorKey.currentState?.pop();
+  static void goBack<T>({T? result}) {
     if (Modular.to.canPop()) {
-      Modular.to.pop();
+      Modular.to.pop(result);
     }
   }
+
 }

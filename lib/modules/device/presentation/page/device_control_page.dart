@@ -83,9 +83,9 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0A2F1F),
+      backgroundColor: const Color(0xFF0B1210),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0A2F1F),
+        backgroundColor: const Color(0xFF0F1F18),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -283,7 +283,7 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
                   ),
                 );
               },
-              activeThumbColor: const Color(0xFF2ECC71),
+
             ),
         ],
       ),

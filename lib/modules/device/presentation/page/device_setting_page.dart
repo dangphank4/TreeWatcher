@@ -3,6 +3,7 @@ import 'package:flutter_api/core/components/confirm_dialog.dart';
 import 'package:flutter_api/core/constants/app_styles.dart';
 import 'package:flutter_api/core/extensions/localized_extendsion.dart';
 import 'package:flutter_api/core/extensions/num_extendsion.dart';
+import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/core/utils/utils.dart';
 import 'package:flutter_api/modules/device/presentation/blocs/device_bloc.dart';
 import 'package:flutter_api/modules/device/presentation/blocs/device_event.dart';
@@ -46,9 +47,9 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF000D00), // dark navy
+      backgroundColor: Color(0xFF0B1210), // dark navy
       appBar: AppBar(
-        backgroundColor: Color(0xFF001600),
+        backgroundColor: Color(0xFF0F1F18),
         elevation: 0,
         title: Text(
           context.localization.deviceSettingsTitle,
@@ -61,9 +62,7 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
         listener: (context, state) {
           if (state is DeviceSuccess) {
             Utils.debugLog(state.message);
-            if (state.message.toLowerCase().contains('xóa')) {
-              Navigator.pop(context);
-            }
+            NavigationHelper.goBack(result: true);
           }
         },
         child: ListView(
@@ -93,7 +92,7 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
         children: [
           const CircleAvatar(
             radius: 26,
-            backgroundColor: Color(0xFF22C55E),
+            backgroundColor: Color(0xFF33FF00),
             child: Icon(Icons.devices, color: Colors.black),
           ),
           16.horizontalSpace,
@@ -101,13 +100,14 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(deviceName,
-                    style: Styles.large.smb.copyWith(color: Colors.white)),
+                Text(
+                  deviceName,
+                  style: Styles.large.smb.copyWith(color: Colors.white),
+                ),
                 4.verticalSpace,
                 Text(
                   context.localization.deviceIdLabel(deviceId),
-                  style: Styles.small.regular
-                      .copyWith(color: Colors.white60),
+                  style: Styles.small.regular.copyWith(color: Colors.white60),
                 ),
               ],
             ),
@@ -168,7 +168,14 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
         gradient: const LinearGradient(
-          colors: [Color(0xFF22C55E), Color(0xFF4ADE80)],
+          colors: [Colors.white, Color(0xFF4ADE80)],
+          stops: [0, 0.4],
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+        ),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: 0.7),
+          width: 2,
         ),
       ),
       child: ElevatedButton(
@@ -182,10 +189,7 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
           children: const [
             Icon(Icons.save, color: Colors.black),
             SizedBox(width: 8),
-            Text(
-              'Lưu thay đổi',
-              style: TextStyle(color: Colors.black),
-            ),
+            Text('Lưu thay đổi', style: TextStyle(color: Colors.black)),
           ],
         ),
       ),
@@ -218,16 +222,34 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
             ],
           ),
           12.verticalSpace,
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
+          InkWell(
+            onTap: _onDeletePressed,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                border: Border.all(
+                  width: 2,
+                  color: Colors.white.withValues(alpha: 0.8),
+                ),
+                borderRadius: BorderRadius.circular(30),
+                gradient: LinearGradient(
+                  colors: [Colors.red, Colors.white],
+                  stops: [0.7, 1],
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                ),
               ),
-              icon: const Icon(Icons.delete),
-              label: const Text('Xóa thiết bị'),
-              onPressed: _onDeletePressed,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.delete),
+                  Text(
+                    'Xóa thiết bị',
+                    style: Styles.medium.smb.copyWith(color: Colors.white),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
@@ -249,7 +271,7 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
         children: [
           Row(
             children: [
-              Icon(icon, color: const Color(0xFF22C55E)),
+              Icon(icon, color: const Color(0xFF33FF00)),
               8.horizontalSpace,
               Text(
                 title,
@@ -265,8 +287,9 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
   }
 
   BoxDecoration _cardDecoration() => BoxDecoration(
-    color: const Color(0xFF002200),
+    color: const Color(0xFF0A2F1F),
     borderRadius: BorderRadius.circular(16),
+    border: Border.all(color: Colors.greenAccent.shade400, width: 1),
     boxShadow: [
       BoxShadow(
         blurRadius: 20,
@@ -293,9 +316,7 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
         hintStyle: const TextStyle(color: Colors.white38),
         filled: true,
         fillColor: const Color(0xFF020617),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
     );
   }
@@ -307,21 +328,18 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
     final newPass = _newPasswordController.text.trim();
 
     bool willRename = newName.isNotEmpty && newName != deviceName;
-    bool willChangePassword = _expandPassword &&
+    bool willChangePassword =
+        _expandPassword &&
         oldPass.isNotEmpty &&
         newPass.isNotEmpty &&
         newPass.length >= 6 &&
         oldPass != newPass;
 
-    // ❌ Không có thay đổi gì
     if (!willRename && !willChangePassword) {
-      _showSnack(
-        context.localization.noChanges,
-      );
+      _showSnack(context.localization.noChanges);
       return;
     }
 
-    // ✅ Hỏi xác nhận
     final confirm = await showConfirmDialog(
       context: context,
       title: context.localization.saveChanges,
@@ -333,11 +351,7 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
     // ===== THỰC HIỆN THAY ĐỔI =====
     if (willRename) {
       _deviceBloc.add(
-        RenameDevice(
-          deviceId: deviceId,
-          newName: newName,
-          userId: userId,
-        ),
+        RenameDevice(deviceId: deviceId, newName: newName, userId: userId),
       );
     }
 
@@ -355,7 +369,6 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
     }
   }
 
-
   Future<void> _onDeletePressed() async {
     final confirm = await showConfirmDialog(
       context: context,
@@ -364,11 +377,9 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
     );
 
     if (confirm == true) {
-      _deviceBloc.add(DeleteDevice(
-        userId: userId,
-        deviceId: deviceId,
-      ));
+      _deviceBloc.add(DeleteDevice(userId: userId, deviceId: deviceId));
     }
+    NavigationHelper.goBack();
   }
 
   void _showSnack(String message) {
@@ -380,5 +391,4 @@ class _DeviceSettingPageState extends State<DeviceSettingPage> {
       ),
     );
   }
-
 }

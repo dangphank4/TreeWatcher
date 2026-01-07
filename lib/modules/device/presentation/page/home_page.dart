@@ -49,15 +49,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF000D00),
+      backgroundColor: Color(0xFF0B1210),
       appBar: AppBar(
-        backgroundColor: Color(0xFF001600),
+        backgroundColor: Color(0xFF0F1F18),
         title: Padding(
           padding: const EdgeInsets.only(left: 16, top: 16, bottom: 8),
           child: Text(
             context.localization.deviceListTitle,
             style: Styles.h1.smb.copyWith(
-              color: Colors.white.withValues(alpha: 0.9),
+              color: Color(0xFFFFFFFF),
             ),
           ),
         ),
@@ -125,12 +125,12 @@ class _HomePageState extends State<HomePage> {
               20.verticalSpace,
               Text(
                 '${context.localization.goodMorning} $_userName',
-                style: Styles.large.smb.copyWith(color: Colors.white),
+                style: Styles.large.smb.copyWith(color: Color(0XFFFFFFFF),)
               ),
               const SizedBox(height: 8),
               Text(
                 context.localization.welcomeBackMessage,
-                style: Styles.medium.regular.copyWith(color: Colors.white),
+                style: Styles.medium.regular.copyWith(color: Color(0xFFCDE5DA)),
               ),
             ],
           ),
@@ -155,18 +155,18 @@ class _HomePageState extends State<HomePage> {
             width: 50,
             height: 50,
             decoration: BoxDecoration(
-              color: Colors.green,
+              color: Color(0xFF2ECC71),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: Colors.white.withValues(alpha: 0.8)),
             ),
-            child: const Icon(Icons.add, color: Colors.white),
+            child: const Icon(Icons.add, color: Colors.white,size: 36,),
           ),
         ),
         4.verticalSpace,
         Text(
           'Add device',
           style: Styles.xsmall.smb.copyWith(
-            color: Colors.white.withValues(alpha: 0.8),
+            color: Color(0xFFCDE5DA),
           ),
         ),
       ],
@@ -194,10 +194,10 @@ class _HomePageState extends State<HomePage> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: Colors.white.withValues(alpha: 0.6),
+                color: Color(0xFF2ECC71),
                 width: 2,
               ),
-              color: Colors.green.shade300.withValues(alpha: 0.6),
+              color: Color(0xFF142F24),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.15),
@@ -229,13 +229,13 @@ class _HomePageState extends State<HomePage> {
                         deviceName,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: Styles.large.smb.copyWith(color: Colors.white),
+                        style: Styles.large.smb.copyWith(color: Color(0xFFFFFFFF)),
                       ),
                       6.verticalSpace,
                       Text(
                         context.localization.deviceIdLabel(deviceId),
                         style: Styles.small.regular.copyWith(
-                          color: Colors.white.withValues(alpha: 0.85),
+                          color: Color(0xFFCDE5DA),
                         ),
                       ),
                     ],
@@ -244,8 +244,8 @@ class _HomePageState extends State<HomePage> {
                 InkWell(
                   child: SizedBox(
                     child: IconButton(
-                      onPressed: () {
-                        NavigationHelper.navigate(
+                      onPressed: () async {
+                        final result = await NavigationHelper.navigateForResult(
                           '${AppRoutes.moduleDevice}${DeviceModuleRoutes.setting}',
                           args: {
                             'deviceId': deviceId,
@@ -253,7 +253,13 @@ class _HomePageState extends State<HomePage> {
                             'userId': _userId,
                           },
                         );
+
+                        // ✅ có thay đổi → reload
+                        if (result == true && _userId != null) {
+                          _deviceBloc.add(LoadDevices(_userId!));
+                        }
                       },
+
                       icon: Icon(Icons.more_vert),
                     ),
                   ),

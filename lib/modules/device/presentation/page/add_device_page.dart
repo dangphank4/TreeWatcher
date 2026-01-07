@@ -27,11 +27,11 @@ class _AddDevicePageState extends State<AddDevicePage> {
   final TextEditingController _devicePassController = TextEditingController();
   final TextEditingController _deviceNameController = TextEditingController();
   bool _obscurePassword = true;
+  late final List<Map<String, dynamic>> devices;
 
   late final DeviceBloc _deviceBloc;
   late final AccountRepository _accountRepository;
   String? userId;
-  bool _waitingRename = false;
 
   @override
   void initState() {
@@ -48,6 +48,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
       userId = user?.userId;
     });
     Utils.debugLog('uuid: $userId');
+    _deviceBloc.add(LoadDevices(userId!));
   }
 
   @override
@@ -65,70 +66,29 @@ class _AddDevicePageState extends State<AddDevicePage> {
     } else {
       return Scaffold(
         appBar: AppBar(
+          backgroundColor: Color(0xFF0F1F18),
           title: Text(
             context.localization.addNewDevice,
-            style: Styles.h3.smb.copyWith(color: Colors.white70),
+            style: Styles.h3.smb.copyWith(color: Color(0xFFFFFFFF)),
           ),
           centerTitle: true,
           elevation: 0,
         ),
-        backgroundColor: Color(0xFF000D00),
+        backgroundColor:  Color(0xFF0B1210),
         body: BlocListener<DeviceBloc, DeviceState>(
           bloc: _deviceBloc,
-          listener: (context, state) async {
-            if (state is DeviceSuccess && !_waitingRename) {
-              Utils.debugLog('[AddDevice] RegisterDevice success');
-
-              if (!mounted) return;
-
-              final deviceId = _deviceCodeController.text.trim();
-              final newName = _deviceNameController.text.trim();
-
-              if (newName.isEmpty) {
-                Utils.debugLog('[AddDevice] Thiếu tên thiết bị → yêu cầu user nhập tên');
-
-                _showSuccessSnackBar(
-                  'Thiết bị đã được thêm. Bạn có thể đặt tên sau.',
-                );
-
-                // Navigator.pop(context, true);
-                return;
-              }
-
-              /// Có tên → rename
-              Utils.debugLog('[AddDevice] Có tên → bắt đầu rename: $newName');
-
-              _waitingRename = true;
-
-              _deviceBloc.add(
-                RenameDevice(
-                  userId: userId!,
-                  deviceId: deviceId,
-                  newName: newName,
-                ),
-              );
-
-              Utils.debugLog('[AddDevice] RenameDevice event dispatched');
+          listener: (context, state) {
+            if (state is DeviceSuccess) {
+              Utils.debugLog('[AddDevice] Register success → load devices');
             }
 
-
-            if (state is DeviceLoaded && _waitingRename) {
-              Utils.debugLog('[AddDevice] Rename thành công');
-
-              _waitingRename = false;
-
-              _showSuccessSnackBar('Thêm thiết bị thành công!');
-              Navigator.pop(context, true);
+            if (state is DeviceLoaded) {
+              devices = state.devices;
             }
-
-
             if (state is DeviceFailure) {
               Utils.debugLog('[AddDevice] ERROR: ${state.error}');
-
-              _waitingRename = false;
               _showErrorSnackBar(state.error);
             }
-
           },
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
@@ -141,14 +101,14 @@ class _AddDevicePageState extends State<AddDevicePage> {
                   20.verticalSpace,
                   Text(
                     context.localization.scanQr,
-                    style: Styles.h1.smb.copyWith(color: Colors.white),
+                    style: Styles.h1.smb.copyWith(color: Color(0xFFFFFFFF)),
                   ),
                   8.verticalSpace,
                   SizedBox(
                     width: 300,
                     child: Text(
                       context.localization.scanQrDesc,
-                      style: Styles.medium.smb.copyWith(color: Colors.white70),
+                      style: Styles.medium.smb.copyWith(color: Color(0xFFCDE5DA)),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                     ),
@@ -169,7 +129,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
                           child: Text(
                             '1',
                             style: Styles.medium.smb.copyWith(
-                              color: Colors.white,
+                              color: Color(0xFFFFFFFF),
                             ),
                           ),
                         ),
@@ -177,7 +137,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
                       8.horizontalSpace,
                       Text(
                         context.localization.deviceId,
-                        style: Styles.medium.smb.copyWith(color: Colors.white),
+                        style: Styles.medium.smb.copyWith(color: Color(0xFFFFFFFF)),
                       ),
                     ],
                   ),
@@ -385,11 +345,19 @@ class _AddDevicePageState extends State<AddDevicePage> {
                       }
 
                       if (name.isEmpty) {
-                        Utils.debugLog('[AddDevice] User chưa nhập tên thiết bị');
-                        _showErrorSnackBar('User chưa nhập tên thiết bị');
+                        _showErrorSnackBar('Vui lòng nhập tên thiết bị');
                         return;
-                      } else {
-                        Utils.debugLog('[AddDevice] User đã nhập tên: $name');
+                      }
+                      final existedDevice = devices.where(
+                            (e) => e['deviceId'] == code,
+                      ).toList();
+
+                      if (existedDevice.isNotEmpty) {
+                        final deviceName = existedDevice.first['name'];
+                        if (deviceName != null && deviceName.toString().isNotEmpty) {
+                          _showErrorSnackBar('Thiết bị đã được đăng ký');
+                          return;
+                        }
                       }
 
                       _deviceBloc.add(
@@ -400,6 +368,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
                           deviceName: name,
                         ),
                       );
+                      NavigationHelper.goBack();
                     },
 
                     child: Container(
@@ -410,7 +379,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
                         border: Border.all(width: 1, color: Colors.green),
                         gradient: LinearGradient(
                           colors: [Colors.green, Colors.white],
-                          stops: [0.4, 0.8],
+                          stops: [0.5, 0.85],
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
                         ),
@@ -424,7 +393,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
                             style: Styles.large.smb.copyWith(color: Colors.black),
                           ),
                           10.horizontalSpace,
-                          Icon(Icons.arrow_forward, color: Colors.red.shade200),
+                          Icon(Icons.arrow_forward, color: Colors.red.shade100),
                         ],
                       ),
                     ),

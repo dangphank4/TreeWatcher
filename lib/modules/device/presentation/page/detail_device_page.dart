@@ -1,14 +1,14 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
 import 'package:flutter_api/core/constants/app_styles.dart';
 import 'package:flutter_api/core/helpers/navigation_helper.dart';
 import 'package:flutter_api/core/utils/utils.dart';
 import 'package:flutter_api/modules/device/general/device_module_routes.dart';
+import 'package:flutter_api/modules/device/presentation/blocs/device_detail_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:fl_chart/fl_chart.dart';
-
-import '../blocs/device_detail_bloc.dart';
+import 'package:intl/intl.dart';
 
 class DetailDevicePage extends StatefulWidget {
   const DetailDevicePage({super.key});
@@ -20,7 +20,7 @@ class DetailDevicePage extends StatefulWidget {
 class _DetailDevicePageState extends State<DetailDevicePage>
     with SingleTickerProviderStateMixin {
   // ===== THEME =====
-  static const _bg = Color(0xFF000D00);
+  static const _bg = Color(0xFF0B1210);
   static const _card = Color(0xFF002200);
   static const _accent = Color(0xFF22C55E);
 
@@ -62,7 +62,7 @@ class _DetailDevicePageState extends State<DetailDevicePage>
     return Scaffold(
       backgroundColor: _bg,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF001600),
+        backgroundColor: const Color(0xFF0F1F18),
         elevation: 0,
         centerTitle: true,
         title: Text(
@@ -295,7 +295,6 @@ class _DetailDevicePageState extends State<DetailDevicePage>
     );
   }
 
-  // ================= CHART =================
   Widget _buildChartSection() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -388,126 +387,124 @@ class _DetailDevicePageState extends State<DetailDevicePage>
 
     if (spots.length < 2) {
       return const Center(
-        child: Text(
-          'Chưa đủ dữ liệu',
-          style: TextStyle(color: Colors.white54),
-        ),
+        child: Text('Chưa đủ dữ liệu để hiển thị biểu đồ',
+            style: TextStyle(color: Colors.white54)),
       );
     }
 
-    // ===== TÍNH MIN / MAX + PADDING Y =====
     final ys = spots.map((e) => e.y).toList();
     final minY = ys.reduce((a, b) => a < b ? a : b);
     final maxY = ys.reduce((a, b) => a > b ? a : b);
-
     final range = (maxY - minY).abs();
-    final padding = range == 0 ? maxY * 0.2 : range * 0.15;
+    final padding = range == 0 ? 1.0 : range * 0.2;
 
-    // ===== SCROLL NGANG =====
-    const double pointWidth = 50;
-    final chartWidth = spots.length * pointWidth;
+    final Color currentColor = _metricColor(_selectedMetric);
 
-    return SizedBox(
-      height: 300,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: SizedBox(
-          width: chartWidth,
-          child: LineChart(
-            LineChartData(
-              minX: 0,
-              maxX: spots.length - 1,
-              minY: minY - padding,
-              maxY: maxY + padding,
+    return LineChart(
+      LineChartData(
+        gridData: FlGridData(
+          show: true,
+          drawVerticalLine: false, // Tắt đường kẻ dọc cho đỡ rối
+          getDrawingHorizontalLine: (value) => FlLine(
+            color: Colors.white.withValues(alpha: 0.05),
+            strokeWidth: 1,
+          ),
+        ),
+        titlesData: FlTitlesData(
+          show: true,
+          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          bottomTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              reservedSize: 30,
+              interval: (spots.length / 4).clamp(1, double.infinity), // Hiển thị khoảng 4-5 nhãn
+              getTitlesWidget: (value, meta) {
+                final index = value.toInt();
+                if (index < 0 || index >= logs.length) return const SizedBox();
 
-              // ===== GRID =====
-              gridData: FlGridData(
-                show: true,
-                horizontalInterval: range == 0 ? null : range / 4,
+                final DateTime date = logs[index]['logged_at'] is DateTime
+                    ? logs[index]['logged_at']
+                    : logs[index]['logged_at'].toDate();
+
+                // Tự động đổi định dạng theo phạm vi thời gian
+                String text = _currentRange.inDays >= 1
+                    ? DateFormat('HH:mm').format(date)
+                    : DateFormat('mm:ss').format(date);
+
+                return SideTitleWidget(
+                  axisSide: meta.axisSide,
+                  child: Text(text, style: const TextStyle(color: Colors.white54, fontSize: 10)),
+                );
+              },
+            ),
+          ),
+          leftTitles: AxisTitles(
+            sideTitles: SideTitles(
+              showTitles: true,
+              getTitlesWidget: (value, meta) => Text(
+                _formatY(value),
+                style: const TextStyle(color: Colors.white54, fontSize: 10),
               ),
-
-              borderData: FlBorderData(show: false),
-
-              // ===== LINE =====
-              lineBarsData: [
-                LineChartBarData(
-                  spots: spots,
-                  isCurved: true,
-                  barWidth: 2,
-                  dotData: FlDotData(show: false),
-                  color: _metricColor(_selectedMetric),
-                ),
-              ],
-
-              // ===== TITLES =====
-              titlesData: FlTitlesData(
-                bottomTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 32,
-                    interval: (spots.length / 5)
-                        .floorToDouble()
-                        .clamp(1, double.infinity),
-                    getTitlesWidget: (value, meta) {
-                      final index = value.toInt();
-                      if (index < 0 || index >= logs.length) {
-                        return const SizedBox.shrink();
-                      }
-
-                      final ts = logs[index]['logged_at'];
-                      final time =
-                      ts is DateTime ? ts : ts.toDate();
-
-                      return Padding(
-                        padding: const EdgeInsets.only(top: 6),
-                        child: Text(
-                          '${time.hour}:${time.minute.toString().padLeft(2, '0')}',
-                          style: const TextStyle(
-                            fontSize: 10,
-                            color: Colors.white54,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-
-                leftTitles: AxisTitles(
-                  sideTitles: SideTitles(
-                    showTitles: true,
-                    reservedSize: 46,
-                    getTitlesWidget: (value, meta) {
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 6),
-                        child: Text(
-                          _formatY(value),
-                          maxLines: 1,
-                          overflow: TextOverflow.clip,
-                          textAlign: TextAlign.right,
-                          style: const TextStyle(
-                            fontSize: 11,
-                            color: Colors.white54,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-
-                topTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-                rightTitles: const AxisTitles(
-                  sideTitles: SideTitles(showTitles: false),
-                ),
-              ),
+              reservedSize: 40,
             ),
           ),
         ),
+        borderData: FlBorderData(show: false),
+        minX: 0,
+        maxX: spots.length.toDouble() - 1,
+        minY: minY - padding,
+        maxY: maxY + padding,
+
+        // Cấu hình Tooltip khi nhấn vào điểm
+        lineTouchData: LineTouchData(
+          touchTooltipData: LineTouchTooltipData(
+          //  getTooltipColor: (group) => _card.withValues(alpha: 0.9),
+            getTooltipItems: (touchedSpots) {
+              return touchedSpots.map((spot) {
+                final date = logs[spot.x.toInt()]['logged_at'];
+                final timeStr = DateFormat('HH:mm:ss dd/MM').format(
+                    date is DateTime ? date : date.toDate());
+                return LineTooltipItem(
+                  '${spot.y.toStringAsFixed(1)}\n',
+                  TextStyle(color: currentColor, fontWeight: FontWeight.bold),
+                  children: [
+                    TextSpan(
+                      text: timeStr,
+                      style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.normal),
+                    ),
+                  ],
+                );
+              }).toList();
+            },
+          ),
+        ),
+
+        lineBarsData: [
+          LineChartBarData(
+            spots: spots,
+            isCurved: true,
+            //curveStyle: CurveStyle.straight, // Hoặc dùng true để cong mềm mại
+            color: currentColor,
+            barWidth: 3,
+            isStrokeCapRound: true,
+            dotData: const FlDotData(show: false), // Ẩn chấm để biểu đồ mượt hơn
+            belowBarData: BarAreaData(
+              show: true,
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  currentColor.withValues(alpha: 0.3),
+                  currentColor.withValues(alpha: 0.0),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
-
 
   String _formatY(double value) {
     if (value >= 1000) {
