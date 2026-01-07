@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../datasource/device_realtime_datasource.dart';
 import '../datasource/device_log_datasource.dart';
 
@@ -10,6 +12,10 @@ class DeviceDetailRepository {
   //realtime
   Stream<Map<String, dynamic>> watchDeviceView(String deviceId) {
     return realtimeDs.watchDeviceView(deviceId);
+  }
+
+  Stream<bool> watchDeviceOnline(String deviceId) {
+    return realtimeDs.watchDeviceOnline(deviceId);
   }
 
   Stream<Map<String, dynamic>> watchDeviceController(String deviceId) {
@@ -72,7 +78,11 @@ class DeviceDetailRepository {
 
     print("=== Logs from $deviceId ===");
     for (final log in list) {
-      print(log);
+      //print(log);
+      final Timestamp ts = log['logged_at'];
+      final DateTime date = ts.toDate();
+
+      print(date);
     }
     print("=== Total: ${list.length} logs ===");
 

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_api/core/constants/app_routes.dart';
 import 'package:flutter_api/core/constants/app_styles.dart';
 import 'package:flutter_api/core/helpers/navigation_helper.dart';
-import 'package:flutter_api/core/utils/utils.dart';
 import 'package:flutter_api/modules/device/general/device_module_routes.dart';
 import 'package:flutter_api/modules/device/presentation/blocs/device_detail_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,9 +64,23 @@ class _DetailDevicePageState extends State<DetailDevicePage>
         backgroundColor: const Color(0xFF0F1F18),
         elevation: 0,
         centerTitle: true,
-        title: Text(
-          deviceName,
-          style: Styles.h4.smb.copyWith(color: Colors.white),
+        title: BlocBuilder<DeviceDetailBloc, DeviceDetailState>(
+          buildWhen: (prev, curr) => prev.isOnline != curr.isOnline,
+          builder: (context, state) {
+            final isOnline = state.isOnline ?? false;
+
+            return Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  deviceName,
+                  style: Styles.h4.smb.copyWith(color: Colors.white),
+                ),
+                const SizedBox(width: 8),
+                _OnlineDot(isOnline: isOnline),
+              ],
+            );
+          },
         ),
       ),
       body: SingleChildScrollView(
@@ -537,7 +550,6 @@ class _DetailDevicePageState extends State<DetailDevicePage>
     return spots;
   }
 
-
   BoxDecoration _cardDecoration() => BoxDecoration(
     color: _card,
     borderRadius: BorderRadius.circular(16),
@@ -565,3 +577,35 @@ class _DetailDevicePageState extends State<DetailDevicePage>
     }
   }
 }
+
+class _OnlineDot extends StatelessWidget {
+  final bool isOnline;
+
+  const _OnlineDot({required this.isOnline});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Container(
+          width: 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: isOnline ? Colors.green : Colors.red,
+            shape: BoxShape.circle,
+          ),
+        ),
+        const SizedBox(width: 4),
+        Text(
+          isOnline ? 'ONLINE' : 'OFFLINE',
+          style: TextStyle(
+            color: isOnline ? Colors.green : Colors.red,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+}
+

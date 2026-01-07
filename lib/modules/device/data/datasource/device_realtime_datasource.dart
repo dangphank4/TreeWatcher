@@ -69,6 +69,13 @@ class DeviceRealtimeDatasource {
       'motor_time_start': time,
     });
   }
+  /// LISTEN DEVICE ONLINE STATUS
+  Stream<bool> watchDeviceOnline(String deviceId) {
+    return _db
+        .ref('sensors/$deviceId/status/isOnline')
+        .onValue
+        .map((event) => event.snapshot.value == true);
+  }
 
   DatabaseReference _controllerRef(String deviceId) =>
       _db.ref('sensors/$deviceId/controller');

@@ -74,6 +74,7 @@ class DeviceDetailState {
   final Map<String, dynamic>? controller;
   final List<Map<String, dynamic>> logs;
   final bool loading;
+  final bool? isOnline;
   final bool controlLoading; // Loading riêng cho control actions
   final String? error;
   final String? controlError; // Error riêng cho control actions
@@ -85,6 +86,7 @@ class DeviceDetailState {
     this.logs = const [],
     this.loading = false,
     this.controlLoading = false,
+    this.isOnline,
     this.error,
     this.controlError,
     this.successMessage,
@@ -96,6 +98,7 @@ class DeviceDetailState {
     List<Map<String, dynamic>>? logs,
     bool? loading,
     bool? controlLoading,
+    bool? isOnline,
     String? error,
     String? controlError,
     String? successMessage,
@@ -106,6 +109,7 @@ class DeviceDetailState {
       logs: logs ?? this.logs,
       loading: loading ?? this.loading,
       controlLoading: controlLoading ?? this.controlLoading,
+      isOnline: isOnline ?? this.isOnline,
       error: error,
       controlError: controlError,
       successMessage: successMessage,
@@ -174,6 +178,20 @@ class DeviceDetailBloc extends Bloc<DeviceDetailEvent, DeviceDetailState> {
       onError: (e, _) {
         return state.copyWith(
           error: e.toString(),
+        );
+      },
+    );
+
+    emit.forEach<bool>(
+      repo.watchDeviceOnline(event.deviceId),
+      onData: (isOnline) {
+        return state.copyWith(
+          isOnline: isOnline,
+        );
+      },
+      onError: (e, _) {
+        return state.copyWith(
+          isOnline: false,
         );
       },
     );
