@@ -66,14 +66,15 @@ class _AddDevicePageState extends State<AddDevicePage> {
     } else {
       return Scaffold(
         appBar: AppBar(
+          backgroundColor: Color(0xFF0F1F18),
           title: Text(
             context.localization.addNewDevice,
-            style: Styles.h3.smb.copyWith(color: Colors.white70),
+            style: Styles.h3.smb.copyWith(color: Color(0xFFFFFFFF)),
           ),
           centerTitle: true,
           elevation: 0,
         ),
-        backgroundColor: Color(0xFF000D00),
+        backgroundColor:  Color(0xFF0B1210),
         body: BlocListener<DeviceBloc, DeviceState>(
           bloc: _deviceBloc,
           listener: (context, state) {
@@ -100,14 +101,14 @@ class _AddDevicePageState extends State<AddDevicePage> {
                   20.verticalSpace,
                   Text(
                     context.localization.scanQr,
-                    style: Styles.h1.smb.copyWith(color: Colors.white),
+                    style: Styles.h1.smb.copyWith(color: Color(0xFFFFFFFF)),
                   ),
                   8.verticalSpace,
                   SizedBox(
                     width: 300,
                     child: Text(
                       context.localization.scanQrDesc,
-                      style: Styles.medium.smb.copyWith(color: Colors.white70),
+                      style: Styles.medium.smb.copyWith(color: Color(0xFFCDE5DA)),
                       textAlign: TextAlign.center,
                       maxLines: 2,
                     ),
@@ -128,7 +129,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
                           child: Text(
                             '1',
                             style: Styles.medium.smb.copyWith(
-                              color: Colors.white,
+                              color: Color(0xFFFFFFFF),
                             ),
                           ),
                         ),
@@ -136,7 +137,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
                       8.horizontalSpace,
                       Text(
                         context.localization.deviceId,
-                        style: Styles.medium.smb.copyWith(color: Colors.white),
+                        style: Styles.medium.smb.copyWith(color: Color(0xFFFFFFFF)),
                       ),
                     ],
                   ),
@@ -378,7 +379,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
                         border: Border.all(width: 1, color: Colors.green),
                         gradient: LinearGradient(
                           colors: [Colors.green, Colors.white],
-                          stops: [0.4, 0.8],
+                          stops: [0.5, 0.85],
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
                         ),
@@ -392,7 +393,7 @@ class _AddDevicePageState extends State<AddDevicePage> {
                             style: Styles.large.smb.copyWith(color: Colors.black),
                           ),
                           10.horizontalSpace,
-                          Icon(Icons.arrow_forward, color: Colors.red.shade200),
+                          Icon(Icons.arrow_forward, color: Colors.red.shade100),
                         ],
                       ),
                     ),
