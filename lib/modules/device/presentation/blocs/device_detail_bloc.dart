@@ -12,6 +12,16 @@ class WatchDevice extends DeviceDetailEvent {
   WatchDevice(this.deviceId);
 }
 
+class SetMotorTimeout extends DeviceDetailEvent {
+  final String deviceId;
+  final int timeoutSeconds;
+
+  SetMotorTimeout({
+    required this.deviceId,
+    required this.timeoutSeconds,
+  });
+}
+
 class LoadDeviceLogs extends DeviceDetailEvent {
   final String deviceId;
   final DateTime from;
@@ -75,6 +85,7 @@ class DeviceDetailState {
   final List<Map<String, dynamic>> logs;
   final bool loading;
   final bool? isOnline;
+  final int? lastSeen;
   final bool controlLoading; // Loading riêng cho control actions
   final String? error;
   final String? controlError; // Error riêng cho control actions
@@ -87,6 +98,7 @@ class DeviceDetailState {
     this.loading = false,
     this.controlLoading = false,
     this.isOnline,
+    this.lastSeen,
     this.error,
     this.controlError,
     this.successMessage,
@@ -99,6 +111,7 @@ class DeviceDetailState {
     bool? loading,
     bool? controlLoading,
     bool? isOnline,
+    int? lastSeen,
     String? error,
     String? controlError,
     String? successMessage,
@@ -110,6 +123,7 @@ class DeviceDetailState {
       loading: loading ?? this.loading,
       controlLoading: controlLoading ?? this.controlLoading,
       isOnline: isOnline ?? this.isOnline,
+      lastSeen: lastSeen ?? this.lastSeen,
       error: error,
       controlError: controlError,
       successMessage: successMessage,
@@ -142,6 +156,7 @@ class DeviceDetailBloc extends Bloc<DeviceDetailEvent, DeviceDetailState> {
     on<SetAutoMode>(_onSetAutoMode);
     on<SetHumidityRange>(_onSetHumidityRange);
     on<SetScheduleTime>(_onSetScheduleTime);
+    on<SetMotorTimeout>(_onSetMotorTimeout);
   }
 
   Future<void> _onWatchDevice(
@@ -195,6 +210,13 @@ class DeviceDetailBloc extends Bloc<DeviceDetailEvent, DeviceDetailState> {
         );
       },
     );
+
+    // Fetch lastSeen ONCE (không stream)
+    try {
+      final lastSeen = await repo.getDeviceLastSeen(event.deviceId);
+      emit(state.copyWith(lastSeen: lastSeen));
+    } catch (_) {
+    }
   }
 
   Future<void> _onLoadLogs(
@@ -342,4 +364,47 @@ class DeviceDetailBloc extends Bloc<DeviceDetailEvent, DeviceDetailState> {
       ));
     }
   }
+
+  Future<void> _onSetMotorTimeout(
+      SetMotorTimeout event,
+      Emitter<DeviceDetailState> emit,
+      ) async {
+    if (event.timeoutSeconds <= 0) {
+      emit(state.copyWith(
+        controlError: 'Thời gian timeout không hợp lệ',
+      ));
+      return;
+    }
+
+    if (event.timeoutSeconds < 1) {
+      emit(state.copyWith(
+        controlError: 'Thời gian bơm tối thiểu là 1 giây',
+      ));
+      return;
+    }
+
+    emit(state.copyWith(controlLoading: true, controlError: null));
+
+    try {
+      await repo.setMotorTimeout(
+        deviceId: event.deviceId,
+        timeoutSeconds: event.timeoutSeconds,
+      );
+
+      emit(state.copyWith(
+        controlLoading: false,
+        successMessage:
+        'Đã cập nhật thời gian bơm (${event.timeoutSeconds}s)',
+      ));
+
+      await Future.delayed(const Duration(seconds: 3));
+      emit(state.copyWith(successMessage: null));
+    } catch (e) {
+      emit(state.copyWith(
+        controlLoading: false,
+        controlError: 'Lỗi cập nhật timeout: $e',
+      ));
+    }
+  }
+
 }

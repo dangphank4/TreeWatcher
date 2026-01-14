@@ -130,6 +130,8 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
             final scheduleTime = controller['motor_time_start'] ?? '--:--:--';
             final currentMinHum = controller['min_hum'] ?? 30;
             final currentMaxHum = controller['max_hum'] ?? 70;
+            final rawTimeout = controller['timeout'];
+            final timeout = (rawTimeout is int && rawTimeout >= 1) ? rawTimeout : 1;
 
             // Initialize humidity values once from database
             if (!_isInitialized && controller.isNotEmpty) {
@@ -186,6 +188,16 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
 
                   const SizedBox(height: 24),
 
+                  _buildSectionTitle('Giới hạn thời gian bơm'),
+                  const SizedBox(height: 12),
+                  _buildTimeoutCard(
+                    context: context,
+                    timeout: timeout,
+                    isLoading: state.controlLoading,
+                  ),
+
+                  const SizedBox(height: 24),
+
                   // Trạng thái motor (luôn hiển thị)
                   _buildMotorStatusCard(
                     isMotorOn: isMotorOn,
@@ -199,6 +211,119 @@ class _DeviceControlPageState extends State<DeviceControlPage> {
       ),
     );
   }
+
+  Widget _buildTimeoutCard({
+    required BuildContext context,
+    required int timeout,
+    required bool isLoading,
+  }) {
+    final safeTimeout = timeout < 1 ? 1 : timeout;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A4D3A),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: const Color(0xFF2ECC71).withValues(alpha: 0.3),
+          width: 1,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // ===== TITLE =====
+          Row(
+            children: const [
+              Icon(Icons.timer, color: Color(0xFF2ECC71), size: 24),
+              SizedBox(width: 8),
+              Text(
+                'Thời gian bơm tối đa',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 8),
+          Text(
+            'Bơm sẽ tự động dừng sau $safeTimeout giây kể từ khi bật',
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.7),
+              fontSize: 12,
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // ===== BUTTON OPEN DIALOG =====
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: isLoading
+                  ? null
+                  : () async {
+                final result = await showDialog<int>(
+                  context: context,
+                  builder: (_) => _TimeoutPickerDialog(
+                    initialTimeout: safeTimeout,
+                  ),
+                );
+
+                if (result != null && mounted) {
+                  BlocProvider.of<DeviceDetailBloc>(this.context).add(
+                    SetMotorTimeout(
+                      deviceId: deviceId,
+                      timeoutSeconds: result,
+                    ),
+                  );
+                }
+              },
+              icon: const Icon(Icons.edit),
+              label: Text(
+                'Chỉnh thời gian ($safeTimeout giây)',
+                style: const TextStyle(fontSize: 15),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF2ECC71),
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          Row(
+            children: const [
+              Icon(
+                Icons.info_outline,
+                color: Color(0xFF2ECC71),
+                size: 16,
+              ),
+              SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  'Áp dụng cho cả chế độ thủ công và tự động',
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+
 
   Widget _buildSectionTitle(String title) {
     return Text(
@@ -1074,6 +1199,153 @@ class _TimePickerDialogState extends State<_TimePickerDialog> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _TimeoutPickerDialog extends StatefulWidget {
+  final int initialTimeout; // giây
+
+  const _TimeoutPickerDialog({
+    required this.initialTimeout,
+  });
+
+  @override
+  State<_TimeoutPickerDialog> createState() => _TimeoutPickerDialogState();
+}
+
+class _TimeoutPickerDialogState extends State<_TimeoutPickerDialog> {
+  late FixedExtentScrollController _controller;
+  late int selectedTimeout;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedTimeout = widget.initialTimeout.clamp(1, 300);
+    _controller = FixedExtentScrollController(
+      initialItem: selectedTimeout - 1, // vì min = 1
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: const Color(0xFF1A4D3A),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Thời gian bơm tối đa',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+            const Text(
+              'Đơn vị: giây',
+              style: TextStyle(
+                color: Colors.white70,
+                fontSize: 13,
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // ===== WHEEL =====
+            Container(
+              height: 200,
+              decoration: BoxDecoration(
+                color: const Color(0xFF0A2F1F),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ListWheelScrollView.useDelegate(
+                controller: _controller,
+                itemExtent: 50,
+                physics: const FixedExtentScrollPhysics(),
+                onSelectedItemChanged: (index) {
+                  setState(() {
+                    selectedTimeout = index + 1; // min = 1
+                  });
+                },
+                childDelegate: ListWheelChildBuilderDelegate(
+                  childCount: 300, // 1 → 300 giây
+                  builder: (context, index) {
+                    final value = index + 1;
+                    final isSelected = value == selectedTimeout;
+
+                    return Center(
+                      child: Text(
+                        '$value',
+                        style: TextStyle(
+                          color: isSelected
+                              ? const Color(0xFF2ECC71)
+                              : Colors.white.withValues(alpha: 0.5),
+                          fontSize: isSelected ? 30 : 20,
+                          fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // ===== BUTTONS =====
+            Row(
+              children: [
+                Expanded(
+                  child: TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text(
+                      'Hủy',
+                      style: TextStyle(color: Colors.white70),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context, selectedTimeout);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF2ECC71),
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Xác nhận',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

@@ -18,6 +18,22 @@ class DeviceDetailRepository {
     return realtimeDs.watchDeviceOnline(deviceId);
   }
 
+  Future<int?> getDeviceLastSeen(String deviceId) async {
+    final snap = await realtimeDs.getDeviceLastSeenOnce(deviceId);
+    return snap;
+  }
+
+  Future<void> setMotorTimeout({
+    required String deviceId,
+    required int timeoutSeconds,
+  }) {
+    return realtimeDs.setMotorTimeout(
+      deviceId: deviceId,
+      timeoutSeconds: timeoutSeconds,
+    );
+  }
+
+
   Stream<Map<String, dynamic>> watchDeviceController(String deviceId) {
     return realtimeDs.watchDeviceController(deviceId);
   }

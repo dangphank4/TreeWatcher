@@ -77,6 +77,25 @@ class DeviceRealtimeDatasource {
         .map((event) => event.snapshot.value == true);
   }
 
+  Future<int?> getDeviceLastSeenOnce(String deviceId) async {
+    final snap = await _db
+        .ref('sensors/$deviceId/status/lastSeen')
+        .get();
+
+    if (!snap.exists) return null;
+    return snap.value as int?;
+  }
+
+  Future<void> setMotorTimeout({
+    required String deviceId,
+    required int timeoutSeconds,
+  }) async {
+    await _controllerRef(deviceId).update({
+      'timeout': timeoutSeconds,
+    });
+  }
+
+
   DatabaseReference _controllerRef(String deviceId) =>
       _db.ref('sensors/$deviceId/controller');
 }

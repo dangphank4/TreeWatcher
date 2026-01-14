@@ -65,9 +65,12 @@ class _DetailDevicePageState extends State<DetailDevicePage>
         elevation: 0,
         centerTitle: true,
         title: BlocBuilder<DeviceDetailBloc, DeviceDetailState>(
-          buildWhen: (prev, curr) => prev.isOnline != curr.isOnline,
+          buildWhen: (prev, curr) =>
+          prev.isOnline != curr.isOnline ||
+              prev.lastSeen != curr.lastSeen,
           builder: (context, state) {
             final isOnline = state.isOnline ?? false;
+            final lastSeen = state.lastSeen;
 
             return Row(
               mainAxisSize: MainAxisSize.min,
@@ -77,7 +80,12 @@ class _DetailDevicePageState extends State<DetailDevicePage>
                   style: Styles.h4.smb.copyWith(color: Colors.white),
                 ),
                 const SizedBox(width: 8),
-                _OnlineDot(isOnline: isOnline),
+
+                // ===== STATUS =====
+                if (isOnline)
+                  _OnlineDot(isOnline: true)
+                else
+                  _OfflineStatus(lastSeen: lastSeen),
               ],
             );
           },
@@ -96,6 +104,8 @@ class _DetailDevicePageState extends State<DetailDevicePage>
       ),
     );
   }
+
+
 
   // ================= REALTIME =================
   Widget _buildRealtimeView() {
@@ -651,4 +661,58 @@ class _OnlineDot extends StatelessWidget {
     );
   }
 }
+
+class _OfflineStatus extends StatelessWidget {
+  final int? lastSeen; // epoch seconds
+
+  const _OfflineStatus({this.lastSeen});
+
+  @override
+  Widget build(BuildContext context) {
+    String text = 'OFFLINE';
+
+    if (lastSeen != null) {
+      final now = DateTime.now();
+      final dt =
+      DateTime.fromMillisecondsSinceEpoch(lastSeen! * 1000);
+      final diff = now.difference(dt);
+
+      final hh = dt.hour.toString().padLeft(2, '0');
+      final mm = dt.minute.toString().padLeft(2, '0');
+
+      if (diff.inDays >= 1) {
+        // OFFLINE > 1 ngày → hiện ngày + giờ
+        final dd = dt.day.toString().padLeft(2, '0');
+        final mm = dt.month.toString().padLeft(2, '0');
+        final yyyy = dt.year;
+
+        text = 'OFFLINE • $dd/$mm/$yyyy $hh:$mm';
+      } else {
+        // OFFLINE < 1 ngày → hiện giờ
+        text = 'OFFLINE • $hh:$mm';
+      }
+    }
+
+    return Row(
+      children: [
+        const Icon(
+          Icons.circle,
+          size: 8,
+          color: Colors.red,
+        ),
+        const SizedBox(width: 4),
+        Text(
+          text,
+          style: const TextStyle(
+            color: Colors.red,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
 
